@@ -4,20 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>alegilli.es</title>
+
+  <!-- Prevent white flash -->
+  <script src="theme-init.js"></script>
+
   <meta name="description" content="alegilli.es — enthusiastic and approachable product manager." />
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests">
-  <link id="favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/><text x='50' y='68' font-size='64' text-anchor='middle' fill='black' font-family='sans-serif'>a</text></svg>">
-
-  <!-- Open Graph / Twitter Card using the same inline SVG -->
-  <meta property="og:title" content="alegilli.es" />
-  <meta property="og:description" content="Enthusiastic and approachable product manager." />
-  <meta property="og:image" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/><text x='50' y='68' font-size='64' text-anchor='middle' fill='black' font-family='sans-serif'>A</text></svg>" />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <link rel="canonical" href="https://alegilli.es/">
+  <link id="favicon" rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/><text x='50' y='68' font-size='64' text-anchor='middle' fill='black' font-family='sans-serif'>a</text></svg>">
 
   <style>
     :root {
@@ -45,72 +42,43 @@
 
     .wrap { max-width: 50rem; margin: 10vh auto; padding: 0 1.25rem; }
     h1 { font-size: clamp(2.5rem, 6vw, 3.25rem); margin: 0 0 0.25rem; letter-spacing: -0.01em; }
-    h1 a { color: inherit; text-decoration: none; border-bottom: none; text-underline-offset: 3px; }
+    h1 a { color: inherit; text-decoration: none; border-bottom: none; }
     h1 a:hover, h1 a:focus-visible { color: var(--muted); text-decoration: underline; }
     hr { border: none; border-top: 1px solid var(--line); margin: 2rem 0; }
     p { margin: 0 0 1rem; font-size: 1.15rem; max-width: 72ch; }
-    a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--line); transition: color 140ms ease, border-color 140ms ease, text-decoration-color 140ms ease; text-underline-offset: 3px; }
+    a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--line); transition: color 140ms ease, border-color 140ms ease; text-underline-offset: 3px; }
     a:hover, a:focus-visible { border-bottom-color: currentColor; outline: none; }
 
     .toggle { position: fixed; top: 1rem; right: 1rem; background: none; border:1px solid var(--line); border-radius:8px; padding:.45rem .65rem; cursor:pointer; color:var(--text); font-size:.9rem; }
+
+    /* wandering links */
+    .floatingLink {
+      position: absolute;
+      font-weight: 500;
+      border-bottom: none;
+      color: var(--muted);
+      text-transform: lowercase;
+      transition: color 0.2s ease, opacity 0.4s ease;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .floatingLink.ready {
+      opacity: 1;
+      pointer-events: auto;
+    }
   </style>
 </head>
 <body>
   <button class="toggle" id="themeToggle" aria-pressed="false" aria-label="Toggle dark mode">☀️/🌙</button>
+
   <div class="wrap">
-    <h1><a href="https://www.linkedin.com/in/alessandrogillies/" rel="me">alegilli.es</a></h1>
+    <h1>alegilli.es</h1>
     <hr>
-    <p>I’m an approachable and enthusiastic product manager who enjoys bringing clarity to complex challenges.</p>
-    <p>I’ve worked across different organisations and product environments, adapting quickly and helping teams stay focused on what matters for users.</p>
-    <p>I thrive on collaboration, making services simpler and more effective for the people who rely on them.</p>
+    <p>I’m a product manager who brings together user needs and business goals to create great products. I’m friendly and approachable, and I build strong relationships wherever I work. My experience spans highly digital organisations as well as those still early in their journey.</p>
   </div>
 
-  <script>
-    (function(){
-      const el = document.documentElement;
-      const btn = document.getElementById('themeToggle');
-      const favicon = document.getElementById('favicon');
-
-      const lightIcon = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/><text x='50' y='68' font-size='64' text-anchor='middle' fill='black' font-family='sans-serif'>A</text></svg>";
-      const darkIcon = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='black'/><text x='50' y='68' font-size='64' text-anchor='middle' fill='white' font-family='sans-serif'>A</text></svg>";
-
-      function updateFavicon(){
-        const isDark = el.getAttribute('data-theme') === 'dark';
-        favicon.setAttribute('href', isDark ? darkIcon : lightIcon);
-      }
-
-      function setPressed(){
-        const isDark = el.getAttribute('data-theme') === 'dark';
-        btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-      }
-
-      function applyStoredTheme(){
-        const stored = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if(stored === 'dark' || (!stored && prefersDark)){
-          el.setAttribute('data-theme','dark');
-        } else {
-          el.removeAttribute('data-theme');
-        }
-        setPressed();
-        updateFavicon();
-      }
-
-      applyStoredTheme();
-
-      btn.addEventListener('click', () => {
-        const isDark = el.getAttribute('data-theme') === 'dark';
-        if(isDark){
-          el.removeAttribute('data-theme');
-          localStorage.removeItem('theme');
-        } else {
-          el.setAttribute('data-theme','dark');
-          localStorage.setItem('theme','dark');
-        }
-        setPressed();
-        updateFavicon();
-      });
-    })();
-  </script>
+  <script src="pages.js"></script>
+  <script src="links.js"></script>
 </body>
 </html>

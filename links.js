@@ -4,14 +4,31 @@
   const btn = document.getElementById('themeToggle');
   const favicon = document.getElementById('favicon');
 
-  const lightIcon = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/><text x='50' y='68' font-size='64' text-anchor='middle' fill='black' font-family='sans-serif'>A</text></svg>";
-  const darkIcon  = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='black'/><text x='50' y='68' font-size='64' text-anchor='middle' fill='white' font-family='sans-serif'>A</text></svg>";
+  // ---------- Favicon handling ----------
+  // helper: build svg data uri for a given letter
+  function makeIcon(letter, dark) {
+    const bg = dark ? 'black' : 'white';
+    const fg = dark ? 'white' : 'black';
+    return `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='${bg}'/><text x='50' y='68' font-size='64' text-anchor='middle' fill='${fg}' font-family='sans-serif'>${letter}</text></svg>`;
+  }
 
-  // ---------- Theme handling ----------
+  // decide which letter to use based on page
+  function getPageLetter() {
+    const page = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    if (page === '' || page === 'index.html') return 'a'; // home page fixed to 'a'
+    if (page.includes('cv')) return 'c';
+    if (page.includes('malaphors')) return 'm';
+    return 'a'; // fallback
+  }
+
+  const pageLetter = getPageLetter();
+
   function updateFavicon(){
     const isDark = el.getAttribute('data-theme') === 'dark';
-    if (favicon) favicon.setAttribute('href', isDark ? darkIcon : lightIcon);
+    if (favicon) favicon.setAttribute('href', makeIcon(pageLetter, isDark));
   }
+
+  // ---------- Theme handling ----------
   function setPressed(){
     const isDark = el.getAttribute('data-theme') === 'dark';
     if (btn) btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');

@@ -13,11 +13,10 @@
     return `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='${bg}'/><text x='50' y='68' font-size='64' text-anchor='middle' fill='${fg}' font-family='sans-serif'>${letter}</text></svg>`;
   }
   function getPageLetter() {
-    const page = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
-    if (page === '' || page === 'index.html') return 'a';
-    if (page.includes('cv')) return 'c';
-    if (page.includes('malaphors')) return 'm';
-    return 'a';
+    const path = (window.location.pathname || '/').toLowerCase();
+    if (path.includes('/cv')) return 'c';
+    if (path.includes('/malaphors')) return 'm';
+    return 'a'; // home / other
   }
   const pageLetter = getPageLetter();
   function updateFavicon() {
@@ -58,18 +57,40 @@
   }
 
   // ---------- Link creation ----------
+  function normalizeCurrentSlug() {
+  // Normalise the current path to '/', '/malaphors/', '/cv/', etc.
+  const raw = window.location.pathname || '/';
+  const path = raw.replace(/\/+$/, '') || '/'; // strip trailing slash; fallback to '/'
+
+  // Home, whether served as '/' or '/index.html'
+  if (path === '/' || path.toLowerCase() === '/index.html') return '/';
+
+  const parts = path.split('/').filter(Boolean);
+  const last = parts[parts.length - 1]?.toLowerCase();
+
+  // e.g. /malaphors/index.html -> '/malaphors/'
+  if (last === 'index.html') {
+    const parent = parts.slice(0, -1).join('/');
+    return parent ? `/${parent}/` : '/';
+  }
+
+  // e.g. /malaphors -> '/malaphors/'
+  return `/${parts.join('/')}/`;
+  }
+
   function createLinks() {
     if (!window.SITE_PAGES) return;
-    const here = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+
+    const here = normalizeCurrentSlug();
 
     window.SITE_PAGES.forEach(p => {
-      // Skip current internal page; always include external links
+      // Skip the current internal page; always include external links
       if (!p.slug.startsWith('http')) {
-        if ((p.slug || '').toLowerCase() === here) return;
+        if ((p.slug || '') === here) return;
       }
 
       const a = document.createElement('a');
-      a.href = p.slug;
+      a.href = p.slug; // absolute paths for internal links
       a.textContent = p.label;
       a.className = 'floatingLink';
       a.tabIndex = 0;
@@ -106,7 +127,15 @@
   function activateRail() {
     if (railActive) return;
     ensureRail();
-    document.querySelectorAll('.floatingLink').forEach(a => {
+    const links = Array.from(document.querySelectorAll('.floatingLink'));
+
+    // Shuffle the links randomly for the mobile rail
+    for (let i = links.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [links[i], links[j]] = [links[j], links[i]];
+    }
+
+    links.forEach(a => {
       a.classList.add('chip');
       a.style.top = '';
       a.style.left = '';
@@ -133,7 +162,7 @@
     railActive = false;
   }
 
-  // ---------- Position the links ----------
+  // ---------- Position the links (desktop wandering layout) ----------
   function positionLinks() {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
@@ -153,7 +182,7 @@
 
     deactivateRail();
 
-    // Minimum vertical spacing in pixels to avoid crowding
+    // Keep a sensible minimum vertical spacing so links don’t stack too close
     const minSpacing = 48;
     const placedYs = [];
 
@@ -171,8 +200,7 @@
         link.dataset.yPercent = yPercent;
       }
 
-      // Start from the randomised Y and enforce minimum spacing
-      const maxY = vh - 16; // small buffer from bottom
+      const maxY = vh - 16;
       let y = Math.min(maxY, Math.max(8, yPercent * vh));
       let tries = 0;
 
@@ -180,13 +208,12 @@
         const clash = placedYs.some(otherY => Math.abs(y - otherY) < minSpacing);
         if (!clash) break;
         y += minSpacing;
-        if (y > maxY) y = 8; // wrap to top if we spill over
+        if (y > maxY) y = 8;
         tries++;
       }
       placedYs.push(y);
       link.style.top = `${y}px`;
 
-      // Horizontal placement within gutters
       const linkWidth = link.getBoundingClientRect().width || 120;
       const gutter = side === 'left' ? gutterLeft : gutterRight;
       const usable = Math.max(0, gutter - linkWidth);

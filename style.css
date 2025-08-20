@@ -226,3 +226,9 @@ body.rail-active {
   .dates { font-size: 0.95rem; }
   .edu-line { display: block; margin: 0 0 0.35rem; }
 }
+
+/* ---------- Fallback for browsers without backdrop-filter ---------- */
+@supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+  #linkRail { background: var(--bg); }
+  .toggle   { background: var(--bg); }
+}

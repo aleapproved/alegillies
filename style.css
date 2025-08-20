@@ -144,7 +144,7 @@ a:focus-visible {
   overscroll-behavior-x: contain;
   scroll-snap-type: x proximity;
   background: var(--bg);
-  border-top: 1px solid var(--line);
+  /* removed border-top */
   box-shadow: 0 -6px 16px rgba(0,0,0,.06);
 }
 

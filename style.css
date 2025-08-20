@@ -88,9 +88,9 @@ a:focus-visible {
   top: 1rem;
   right: 1rem;
   z-index: 30; /* above wandering links and rail */
-  background: color-mix(in oklab, var(--bg) 92%, transparent);
-  backdrop-filter: saturate(1.1) blur(6px);
-  -webkit-backdrop-filter: saturate(1.1) blur(6px); /* Safari */
+  background: color-mix(in oklab, var(--bg) 85%, transparent);
+  backdrop-filter: saturate(1.1) blur(8px);
+  -webkit-backdrop-filter: saturate(1.1) blur(8px); /* Safari */
   color: var(--text);
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -143,8 +143,11 @@ a:focus-visible {
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x proximity;
-  background: transparent; /* transparent bar */
-  box-shadow: none;        /* remove shadow */
+  background: color-mix(in oklab, var(--bg) 85%, transparent);
+  backdrop-filter: saturate(1.1) blur(8px);
+  -webkit-backdrop-filter: saturate(1.1) blur(8px);
+  box-shadow: 0 -6px 16px rgba(0,0,0,.05);
+  border-top: 1px solid var(--line);
 }
 
 /* Chip styling inside the rail */
@@ -159,9 +162,7 @@ a:focus-visible {
   white-space: nowrap;
   font-size: 1rem;
   scroll-snap-align: start;
-  background: color-mix(in oklab, var(--bg) 92%, transparent);
-  backdrop-filter: saturate(1.1) blur(6px);
-  -webkit-backdrop-filter: saturate(1.1) blur(6px);
+  background: var(--bg);
 }
 
 /* Give space so the fixed rail doesn't cover content */

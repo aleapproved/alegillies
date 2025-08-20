@@ -147,7 +147,7 @@ a:focus-visible {
   backdrop-filter: saturate(1.1) blur(8px);
   -webkit-backdrop-filter: saturate(1.1) blur(8px);
   box-shadow: 0 -6px 16px rgba(0,0,0,.05);
-  /* removed border-top */
+  border-top: 1px solid var(--line);
 }
 
 /* Chip styling inside the rail */

@@ -181,8 +181,8 @@ body.rail-active {
 
 /* ---------- CV: unified spacing & typography ---------- */
 .section-title {
-  margin: 2.25rem 0 0.75rem;
-  font-size: 1.5rem;
+  margin: 2.25rem 0 1rem;
+  font-size: 1.65rem;
   font-weight: 600;
   text-transform: lowercase;
 }
@@ -219,7 +219,7 @@ body.rail-active {
 .wrap > *:not(h1):not(hr) { max-width: 72ch; }
 
 @media (max-width: 720px) {
-  .section-title { font-size: 1.35rem; margin-top: 2rem; }
+  .section-title { font-size: 1.5rem; margin-top: 2rem; }
   p { font-size: 1.05rem; line-height: 1.6; }
   .role-item { grid-template-columns: 1fr; gap: 0.1rem; padding: 0.15rem 0; }
   .org-name { font-size: 1.1rem; }

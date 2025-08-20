@@ -173,16 +173,27 @@ body.rail-active {
   #linkRail { scroll-behavior: auto; }
 }
 
-/* ---------- CV page ---------- */
+/* ---------- CV: unified spacing & typography ---------- */
 .section-title {
-  margin: 2.5rem 0 1rem;
+  margin: 2.25rem 0 0.75rem;
   font-size: 1.5rem;
   font-weight: 600;
   text-transform: lowercase;
 }
+
+/* Organisation block (used by experience & education) */
 .org-block { margin: 1rem 0 1.25rem; }
-.org-name { font-weight: 600; margin-bottom: .25rem; }
+.section-title + .org-block { margin-top: 0.25rem; } /* pull the first org closer to its section title */
+
+.org-name {
+  font-weight: 600;
+  margin: 0 0 .35rem;
+}
+
+/* Role/entry list shared by work & education */
 .role-list { list-style: none; margin: 0; padding: 0; }
+
+/* Each role/entry row */
 .role-item {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -190,20 +201,22 @@ body.rail-active {
   padding: .25rem 0;
   align-items: baseline;
 }
+
+/* Right-aligned dates */
 .dates {
   color: var(--muted);
   font-size: .95rem;
   white-space: nowrap;
 }
+
+/* Stack on phones with the same rules for both sections */
 @media (max-width: 720px) {
   .role-item { grid-template-columns: 1fr; gap: .15rem; }
   .dates { order: 3; }
 }
 
 /* Optional: align all main content (except h1/hr) to same readable width */
-.wrap > *:not(h1):not(hr) {
-  max-width: 72ch;
-}
+.wrap > *:not(h1):not(hr) { max-width: 72ch; }
 
 /* ---------- Mobile polish for CV readability ---------- */
 @media (max-width: 720px) {
@@ -212,5 +225,5 @@ body.rail-active {
   .role-item { grid-template-columns: 1fr; gap: 0.1rem; padding: 0.15rem 0; }
   .org-name { font-size: 1.1rem; }
   .dates { font-size: 0.95rem; }
-  .edu-line { display: block; margin: 0 0 0.35rem; }
+  .edu-line { display: block; margin: 0 0 0.35rem; } /* harmless if not used */
 }

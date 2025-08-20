@@ -143,9 +143,8 @@ a:focus-visible {
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x proximity;
-  background: var(--bg);
-  /* removed border-top */
-  box-shadow: 0 -6px 16px rgba(0,0,0,.06);
+  background: transparent; /* transparent bar */
+  box-shadow: none;        /* remove shadow */
 }
 
 /* Chip styling inside the rail */
@@ -160,6 +159,9 @@ a:focus-visible {
   white-space: nowrap;
   font-size: 1rem;
   scroll-snap-align: start;
+  background: color-mix(in oklab, var(--bg) 92%, transparent);
+  backdrop-filter: saturate(1.1) blur(6px);
+  -webkit-backdrop-filter: saturate(1.1) blur(6px);
 }
 
 /* Give space so the fixed rail doesn't cover content */

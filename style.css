@@ -44,7 +44,6 @@ h1 {
   margin: 0 0 0.25rem;
   letter-spacing: -0.01em;
 }
-/* uncomment to force lowercase on all h1s */
 /* h1 { text-transform: lowercase; } */
 
 h1 a {
@@ -83,37 +82,98 @@ a:focus-visible {
   outline: none;
 }
 
+/* ---------- Theme toggle ---------- */
 .toggle {
   position: fixed;
   top: 1rem;
   right: 1rem;
-  background: none;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: .45rem .65rem;
-  cursor: pointer;
+  z-index: 30; /* above wandering links and rail */
+  background: color-mix(in oklab, var(--bg) 92%, transparent);
+  backdrop-filter: saturate(1.1) blur(6px);
+  -webkit-backdrop-filter: saturate(1.1) blur(6px); /* Safari */
   color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .45rem .65rem;
   font-size: .9rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.toggle:hover,
+.toggle:focus-visible {
+  border-color: currentColor;
+  outline: none;
 }
 
-/* wandering links */
+/* ---------- Wandering links (desktop) ---------- */
 .floatingLink {
   position: absolute;
   font-weight: 500;
   border-bottom: none;
   color: var(--muted);
   text-transform: lowercase;
-  transition: color 0.2s ease, opacity 0.4s ease;
+  transition: color 0.2s ease, opacity 0.4s ease, transform 0.15s ease;
   z-index: 10;
   opacity: 0;
   pointer-events: none;
+  padding: .25rem .4rem; /* nicer tap/focus target even on desktop */
 }
 .floatingLink.ready {
   opacity: 1;
   pointer-events: auto;
 }
+.floatingLink:hover,
+.floatingLink:focus-visible {
+  transform: translateY(-2px);
+  outline: none;
+}
 
-/* cv page specific */
+/* ---------- Bottom link rail (mobile) ---------- */
+#linkRail {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(env(safe-area-inset-bottom) * 1);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem clamp(.5rem, 4vw, 1rem);
+  padding-bottom: calc(.5rem + env(safe-area-inset-bottom));
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+  box-shadow: 0 -6px 16px rgba(0,0,0,.06);
+}
+
+/* Chip styling inside the rail */
+#linkRail .floatingLink {
+  position: static;
+  opacity: 1;
+  pointer-events: auto;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .45rem .7rem;
+  margin: 0;
+  white-space: nowrap;
+  font-size: 1rem;
+  scroll-snap-align: start;
+}
+
+/* Give space so the fixed rail doesn't cover content */
+body.rail-active {
+  padding-bottom: 4.5rem; /* adjust if you add/remove chips */
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .floatingLink { transition: none; }
+  #linkRail { scroll-behavior: auto; }
+}
+
+/* ---------- CV page ---------- */
 .section-title {
   margin: 2.5rem 0 1rem;
   font-size: 1.5rem;

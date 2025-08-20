@@ -1,71 +1,70 @@
-<!doctype html>
-<html lang="en-GB">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>cv — alegilli.es</title>
-
-  <!-- Prevent white flash -->
-  <script src="theme-init.js"></script>
-
-  <meta name="description" content="CV of Alessandro Gillies" />
-  <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests">
-
-  <link id="favicon" rel="icon" type="image/svg+xml"
-    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/><text x='50' y='68' font-size='64' text-anchor='middle' fill='black' font-family='sans-serif'>a</text></svg>">
-
-  <link rel="stylesheet" href="style.css?v=3">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>cv</title>
+  <link rel="stylesheet" href="style.css">
+  <link id="favicon" rel="icon" href="">
 </head>
 <body>
-  <button class="toggle" id="themeToggle" aria-pressed="false" aria-label="Toggle dark mode">☀️/🌙</button>
-
   <div class="wrap">
-    <h1>cv</h1>
+    <h1><a href="index.html">cv</a></h1>
     <hr>
 
     <h2 class="section-title">experience</h2>
 
     <div class="org-block">
-      <div class="org-name">Foreign, Commonwealth & Development Office</div>
+      <div class="org-name">Foreign, Commonwealth and Development Office</div>
       <ul class="role-list">
-        <li class="role-item"><div class="role">Senior Product Manager</div><div class="dates">Aug 2024 – Present</div></li>
+        <li class="role-item">
+          <div>Senior Product Manager</div>
+          <div class="dates">Aug 2024 – Present</div>
+        </li>
       </ul>
     </div>
 
     <div class="org-block">
       <div class="org-name">Government Digital Service</div>
       <ul class="role-list">
-        <li class="role-item"><div class="role">Senior Strategy &amp; Policy Advisor</div><div class="dates">Mar 2022 – Aug 2024</div></li>
-        <li class="role-item"><div class="role">Associate Product Manager</div><div class="dates">May 2021 – Mar 2022</div></li>
+        <li class="role-item">
+          <div>Senior Strategy &amp; Policy Advisor</div>
+          <div class="dates">Mar 2022 – Aug 2024</div>
+        </li>
+        <li class="role-item">
+          <div>Associate Product Manager</div>
+          <div class="dates">May 2021 – Mar 2022</div>
+        </li>
       </ul>
     </div>
 
     <div class="org-block">
       <div class="org-name">Cabinet Office</div>
       <ul class="role-list">
-        <li class="role-item"><div class="role">Policy Advisor</div><div class="dates">Oct 2019 – May 2021</div></li>
-        <li class="role-item"><div class="role">Associate Policy Adviser</div><div class="dates">Mar 2019 – Oct 2019</div></li>
-        <li class="role-item"><div class="role">Co-Chair, Cabinet Office LGBT+ Network</div><div class="dates">Jan 2020 – Dec 2021</div></li>
+        <li class="role-item">
+          <div>Policy Advisor</div>
+          <div class="dates">Oct 2019 – May 2021</div>
+        </li>
+        <li class="role-item">
+          <div>Associate Policy Adviser</div>
+          <div class="dates">Mar 2019 – Oct 2019</div>
+        </li>
+        <li class="role-item">
+          <div>Co-Chair, Cabinet Office LGBT+ Network</div>
+          <div class="dates">Jan 2020 – Dec 2021</div>
+        </li>
       </ul>
     </div>
 
     <h2 class="section-title">education</h2>
-
-    <div class="org-block">
-      <div class="org-name">University of Aberdeen</div>
-      <ul class="role-list">
-        <li class="role-item">
-          <div class="role">BSc Mathematics &amp; Physics — First-class honours (2014–2018); one-year exchange at the University of British Columbia (2015–2016)</div>
-          <div class="dates"></div>
-        </li>
-      </ul>
-    </div>
+    <p class="edu-line"><strong>University of Aberdeen</strong></p>
+    <p class="edu-line">BSc Mathematics &amp; Physics — First-class honours (2014–2018)</p>
+    <p class="edu-line">One-year exchange at the University of British Columbia (2015–2016)</p>
   </div>
 
+  <button class="toggle" id="themeToggle" aria-pressed="false">☀️/🌙</button>
   <script src="pages.js"></script>
   <script src="links.js"></script>
+  <script src="theme-init.js"></script>
 </body>
 </html>

@@ -1,74 +1,70 @@
 // links.js
-(function(){
+(function () {
   const el = document.documentElement;
   const btn = document.getElementById('themeToggle');
   const favicon = document.getElementById('favicon');
+  let rail = null;
+  let railActive = false;
 
   // ---------- Favicon handling ----------
-  // helper: build svg data uri for a given letter
   function makeIcon(letter, dark) {
     const bg = dark ? 'black' : 'white';
     const fg = dark ? 'white' : 'black';
     return `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='${bg}'/><text x='50' y='68' font-size='64' text-anchor='middle' fill='${fg}' font-family='sans-serif'>${letter}</text></svg>`;
   }
-
-  // decide which letter to use based on page
   function getPageLetter() {
     const page = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
-    if (page === '' || page === 'index.html') return 'a'; // home page fixed to 'a'
+    if (page === '' || page === 'index.html') return 'a';
     if (page.includes('cv')) return 'c';
     if (page.includes('malaphors')) return 'm';
-    return 'a'; // fallback
+    return 'a';
   }
-
   const pageLetter = getPageLetter();
-
-  function updateFavicon(){
+  function updateFavicon() {
     const isDark = el.getAttribute('data-theme') === 'dark';
     if (favicon) favicon.setAttribute('href', makeIcon(pageLetter, isDark));
   }
 
   // ---------- Theme handling ----------
-  function setPressed(){
+  function setPressed() {
     const isDark = el.getAttribute('data-theme') === 'dark';
     if (btn) btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
   }
-  function applyStoredTheme(){
+  function applyStoredTheme() {
     const stored = localStorage.getItem('theme');
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     if (stored === 'dark' || (!stored && prefersDark)) {
-      el.setAttribute('data-theme','dark');
+      el.setAttribute('data-theme', 'dark');
     } else {
       el.removeAttribute('data-theme');
     }
     setPressed();
     updateFavicon();
   }
-  if (btn){
+  if (btn) {
     applyStoredTheme();
     btn.addEventListener('click', () => {
       const isDark = el.getAttribute('data-theme') === 'dark';
-      if (isDark){
+      if (isDark) {
         el.removeAttribute('data-theme');
         localStorage.removeItem('theme');
       } else {
-        el.setAttribute('data-theme','dark');
-        localStorage.setItem('theme','dark');
+        el.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
       }
       setPressed();
       updateFavicon();
     });
   }
 
-  // ---------- Wandering links ----------
-  function createLinks(){
+  // ---------- Link creation ----------
+  function createLinks() {
     if (!window.SITE_PAGES) return;
     const here = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
 
     window.SITE_PAGES.forEach(p => {
-      // Always include external links (http/https)
+      // Skip current internal page; always include external links
       if (!p.slug.startsWith('http')) {
-        // For internal pages, skip if it's the current page
         if ((p.slug || '').toLowerCase() === here) return;
       }
 
@@ -76,50 +72,96 @@
       a.href = p.slug;
       a.textContent = p.label;
       a.className = 'floatingLink';
+      a.tabIndex = 0;
 
-      // Open external links in new tab safely
       if (p.slug.startsWith('http')) {
         a.target = "_blank";
         a.rel = "noopener noreferrer";
       }
-
       document.body.appendChild(a);
     });
   }
 
-  function getWrapWidth(){
+  // ---------- Helpers for layouts ----------
+  function getWrapRect() {
     const wrap = document.querySelector('.wrap');
-    if (!wrap) return Math.min(800, window.innerWidth);
-    return wrap.getBoundingClientRect().width;
+    if (!wrap) {
+      const w = Math.min(800, window.innerWidth);
+      const left = (window.innerWidth - w) / 2;
+      return { left, right: left + w, width: w };
+    }
+    return wrap.getBoundingClientRect();
   }
 
-  function positionLinks(){
+  function ensureRail() {
+    if (!rail) {
+      rail = document.createElement('nav');
+      rail.id = 'linkRail';
+      rail.setAttribute('aria-label', 'site links');
+      document.body.appendChild(rail);
+    }
+    return rail;
+  }
+
+  function activateRail() {
+    if (railActive) return;
+    ensureRail();
+    document.querySelectorAll('.floatingLink').forEach(a => {
+      a.classList.add('chip');
+      a.style.top = '';
+      a.style.left = '';
+      a.style.right = '';
+      rail.appendChild(a);
+      a.classList.add('ready');
+      a.style.display = '';
+    });
+    document.body.classList.add('rail-active');
+    railActive = true;
+  }
+
+  function deactivateRail() {
+    if (!railActive) return;
+    document.querySelectorAll('#linkRail .floatingLink').forEach(a => {
+      a.classList.remove('chip');
+      document.body.appendChild(a);
+    });
+    if (rail) {
+      rail.remove();
+      rail = null;
+    }
+    document.body.classList.remove('rail-active');
+    railActive = false;
+  }
+
+  // ---------- Position the links ----------
+  function positionLinks() {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const wrapW = getWrapWidth();
-    let gutter = (vw - wrapW) / 2;
+    const rect = getWrapRect();
+
+    const gutterLeft  = Math.max(0, rect.left);
+    const gutterRight = Math.max(0, vw - rect.right);
+    const largestGutter = Math.max(gutterLeft, gutterRight);
 
     const links = document.querySelectorAll('.floatingLink');
 
-    if (gutter <= 0){
-      links.forEach(link => {
-        link.style.display = 'none';
-        link.classList.remove('ready');
-      });
+    const useRail = (largestGutter < 48) || (vw < 720);
+    if (useRail) {
+      activateRail();
       return;
-    } else {
-      links.forEach(link => { link.style.display = ''; });
     }
+
+    deactivateRail();
 
     links.forEach(link => {
       let side     = link.dataset.side;
       let xPercent = parseFloat(link.dataset.xPercent);
       let yPercent = parseFloat(link.dataset.yPercent);
 
-      if (!side || isNaN(xPercent) || isNaN(yPercent)){
+      if (!side || isNaN(xPercent) || isNaN(yPercent)) {
         side     = Math.random() > 0.5 ? 'left' : 'right';
-        xPercent = Math.random(); // raw 0–1, remapped later
-        yPercent = 0.1 + Math.random() * 0.8; // 10–90% vertical
+        xPercent = Math.random();
+        yPercent = 0.10 + Math.random() * 0.80;
         link.dataset.side = side;
         link.dataset.xPercent = xPercent;
         link.dataset.yPercent = yPercent;
@@ -128,14 +170,13 @@
       const y = yPercent * vh;
       link.style.top = `${y}px`;
 
-      // measure link width
-      const linkWidth = link.getBoundingClientRect().width;
-      const usableWidth = gutter - linkWidth;
+      const linkWidth = link.getBoundingClientRect().width || 120;
+      const gutter = side === 'left' ? gutterLeft : gutterRight;
+      const usable = Math.max(0, gutter - linkWidth);
 
-      // place within 10–90% of usable width
-      const x = 0.1 * usableWidth + xPercent * 0.8 * usableWidth;
+      const x = 0.10 * usable + xPercent * 0.80 * usable;
 
-      if (side === 'left'){
+      if (side === 'left') {
         link.style.left  = `${x}px`;
         link.style.right = '';
       } else {
@@ -144,10 +185,12 @@
       }
 
       link.classList.add('ready');
+      link.style.display = '';
     });
   }
 
   createLinks();
   window.addEventListener('resize', positionLinks);
+  window.addEventListener('orientationchange', positionLinks);
   positionLinks();
 })();

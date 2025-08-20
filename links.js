@@ -153,6 +153,10 @@
 
     deactivateRail();
 
+    // Minimum vertical spacing in pixels to avoid crowding
+    const minSpacing = 48;
+    const placedYs = [];
+
     links.forEach(link => {
       let side     = link.dataset.side;
       let xPercent = parseFloat(link.dataset.xPercent);
@@ -167,9 +171,22 @@
         link.dataset.yPercent = yPercent;
       }
 
-      const y = yPercent * vh;
+      // Start from the randomised Y and enforce minimum spacing
+      const maxY = vh - 16; // small buffer from bottom
+      let y = Math.min(maxY, Math.max(8, yPercent * vh));
+      let tries = 0;
+
+      while (tries < 20) {
+        const clash = placedYs.some(otherY => Math.abs(y - otherY) < minSpacing);
+        if (!clash) break;
+        y += minSpacing;
+        if (y > maxY) y = 8; // wrap to top if we spill over
+        tries++;
+      }
+      placedYs.push(y);
       link.style.top = `${y}px`;
 
+      // Horizontal placement within gutters
       const linkWidth = link.getBoundingClientRect().width || 120;
       const gutter = side === 'left' ? gutterLeft : gutterRight;
       const usable = Math.max(0, gutter - linkWidth);

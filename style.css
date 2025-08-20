@@ -12,6 +12,9 @@
   --line: #333;
 }
 
+/* Disable transitions during first paint to avoid flashes */
+.no-anim *, .no-anim *::before, .no-anim *::after { transition: none !important; }
+
 /* Always reserve scrollbar space so layout width is identical on all pages */
 html {
   overflow-y: scroll;

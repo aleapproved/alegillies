@@ -96,6 +96,7 @@
     const el = document.createElement('button');
     el.className = 'node';
     el.setAttribute('aria-label', label);
+    el.dataset.baseLabel = label; // remember the clean, non-critical label
     el.textContent = emoji;
     el.dataset.kind = kind;
     el.addEventListener('click', () => bump(kind));
@@ -104,42 +105,42 @@
     return el;
   }
 
-  // 5% chance for a 2× emoji that grants 5× XP and shows a subtle marker
-  function maybeApplyCrit(el){
-    if (!el) return;
-    // Clear previous state
+  // Decide crit status and ensure aria-label is reset each spawn
+  function rollCrit(el){
+    if (!el) return false;
+    // Reset to base state every spawn
     el.classList.remove('crit');
     el.removeAttribute('data-crit');
+    const base = el.dataset.baseLabel || el.getAttribute('aria-label') || 'node';
+    el.setAttribute('aria-label', base);
 
-    if (chance(0.05)) {
+    // 5% chance: mark as critical and annotate label
+    const isCrit = chance(0.05);
+    if (isCrit) {
       el.classList.add('crit');       // visual: 2× scale + ✨ via CSS
       el.setAttribute('data-crit', '1');
-      // Improve a11y label once per spawn
-      const base = el.getAttribute('aria-label') || 'node';
-      if (!base.toLowerCase().includes('critical')) {
-        el.setAttribute('aria-label', base + ' (critical)');
-      }
+      el.setAttribute('aria-label', `${base} (critical)`);
     }
+    return isCrit;
   }
 
+  // Place node based on its final size (including crit if any)
   function placeNode(kind){
     const el = arena.querySelector(`[data-kind="${kind}"]`);
     if (!el) return;
 
-    // Measure current node size to avoid off-screen placement
-    const prevLeft = el.style.left, prevTop = el.style.top;
+    // Decide crit FIRST so measurement reflects final size
+    rollCrit(el);
+
+    // Temporarily position at (0,0) to measure current rendered size
     el.style.left = '0px'; el.style.top = '0px';
     const rect = el.getBoundingClientRect();
     const w = rect.width  || 48;
     const h = rect.height || 48;
-    el.style.left = prevLeft; el.style.top = prevTop;
 
     const {x,y} = randPos(w, h);
     el.style.left = x + 'px';
     el.style.top  = y + 'px';
-
-    // Assign crit state per spawn
-    maybeApplyCrit(el);
   }
 
   function vibrate(ms){

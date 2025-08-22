@@ -2,7 +2,6 @@
 (function () {
   const el = document.documentElement;
   const btn = document.getElementById('themeToggle');
-  const favicon = document.getElementById('favicon');
   let rail = null;
   let railActive = false;
 
@@ -16,12 +15,14 @@
     const path = (window.location.pathname || '/').toLowerCase();
     if (path.includes('/cv')) return 'c';
     if (path.includes('/malaphors')) return 'm';
+    if (path.includes('/game')) return 'g';
     return 'a'; // home / other
   }
   const pageLetter = getPageLetter();
   function updateFavicon() {
     const isDark = el.getAttribute('data-theme') === 'dark';
-    if (favicon) favicon.setAttribute('href', makeIcon(pageLetter, isDark));
+    const link = document.getElementById('favicon');
+    if (link) link.setAttribute('href', makeIcon(pageLetter, isDark));
   }
 
   // ---------- Theme handling ----------
@@ -40,8 +41,11 @@
     setPressed();
     updateFavicon();
   }
+
+  // Always apply once, even if there’s no toggle on this page
+  applyStoredTheme();
+
   if (btn) {
-    applyStoredTheme();
     btn.addEventListener('click', () => {
       const isDark = el.getAttribute('data-theme') === 'dark';
       if (isDark) {
@@ -58,24 +62,24 @@
 
   // ---------- Link creation ----------
   function normalizeCurrentSlug() {
-  // Normalise the current path to '/', '/malaphors/', '/cv/', etc.
-  const raw = window.location.pathname || '/';
-  const path = raw.replace(/\/+$/, '') || '/'; // strip trailing slash; fallback to '/'
+    // Normalise the current path to '/', '/malaphors/', '/cv/', etc.
+    const raw = window.location.pathname || '/';
+    const path = raw.replace(/\/+$/, '') || '/'; // strip trailing slash; fallback to '/'
 
-  // Home, whether served as '/' or '/index.html'
-  if (path === '/' || path.toLowerCase() === '/index.html') return '/';
+    // Home, whether served as '/' or '/index.html'
+    if (path === '/' || path.toLowerCase() === '/index.html') return '/';
 
-  const parts = path.split('/').filter(Boolean);
-  const last = parts[parts.length - 1]?.toLowerCase();
+    const parts = path.split('/').filter(Boolean);
+    const last = parts[parts.length - 1]?.toLowerCase();
 
-  // e.g. /malaphors/index.html -> '/malaphors/'
-  if (last === 'index.html') {
-    const parent = parts.slice(0, -1).join('/');
-    return parent ? `/${parent}/` : '/';
-  }
+    // e.g. /malaphors/index.html -> '/malaphors/'
+    if (last === 'index.html') {
+      const parent = parts.slice(0, -1).join('/');
+      return parent ? `/${parent}/` : '/';
+    }
 
-  // e.g. /malaphors -> '/malaphors/'
-  return `/${parts.join('/')}/`;
+    // e.g. /malaphors -> '/malaphors/'
+    return `/${parts.join('/')}/`;
   }
 
   function createLinks() {
@@ -234,7 +238,22 @@
   }
 
   createLinks();
-  window.addEventListener('resize', positionLinks);
+
+  // Debounce resize with rAF
+  let resizeRAF;
+  window.addEventListener('resize', () => {
+    if (resizeRAF) cancelAnimationFrame(resizeRAF);
+    resizeRAF = requestAnimationFrame(positionLinks);
+  });
   window.addEventListener('orientationchange', positionLinks);
+
+  // Re-position once fonts are ready (widths can change)
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(positionLinks);
+  }
+
+  // Extra safety on slow connections
+  window.addEventListener('load', positionLinks);
+
   positionLinks();
 })();

@@ -183,11 +183,11 @@
   }
 
   function setStatUI(label, s, textEl, pctEl, barEl){
-    const percent = s.lvl >= 99 ? 100 : Math.floor((s.xp / s.next) * 100);
-    const lvlText = s.lvl >= 99 ? `lvl 99` : `lvl ${s.lvl}`;
-    textEl.textContent = lvlText;
-    pctEl.textContent = s.lvl >= 99 ? 'max' : `${percent}%`;
-    barEl.style.width = `${Math.min(100, percent)}%`;
+  const percent = s.lvl >= 99 ? 100 : Math.floor((s.xp / s.next) * 100);
+  const lvlText = s.lvl >= 99 ? `lvl 99` : `lvl ${s.lvl}`;
+  if (textEl) textEl.textContent = lvlText;
+  if (pctEl)  pctEl.textContent  = s.lvl >= 99 ? 'max' : `${percent}%`; // safe if still present
+  if (barEl)  barEl.style.width  = `${Math.min(100, percent)}%`;
   }
 
   function bump(kind){

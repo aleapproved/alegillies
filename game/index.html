@@ -11,9 +11,19 @@
   <meta name="description" content="Minimal clicker game — woodcutting, mining and fishing with a clean aesthetic." />
 
   <!-- Site CSS -->
-  <link rel="stylesheet" href="/style.css?v=4">
+  <link rel="stylesheet" href="/base.css?v=5">
+  <link rel="stylesheet" href="/game.css?v=1">
+
+  <style>
+    /* Only this page: don’t allow vertical scrolling */
+    html { overflow-y: hidden; }
+    /* Trim the big site margin so everything fits comfortably */
+    body[data-page="game"] .wrap { margin: 1.25rem 0; }
+  </style>
+
 </head>
-<body>
+<body data-page="game">
+
   <button class="toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode">☀️/🌙</button>
 
   <div class="wrap">
@@ -24,35 +34,32 @@
       <section>
         <dl class="stats" aria-live="polite">
           <dt>woodcutting</dt>
-          <dd id="stat-wood">
-            <div class="statline">
-              <span class="stattext" id="text-wood">–</span>
-              <span class="statpct" id="pct-wood">–</span>
-            </div>
-            <div class="progress" aria-hidden="true">
-              <div class="progress-bar" id="bar-wood" style="width:0%"></div>
+          <dd>
+            <div class="statrow">
+              <div class="progress" aria-hidden="true">
+                <div class="progress-bar" id="bar-wood" style="width:0%"></div>
+              </div>
+              <span class="level" id="text-wood">–</span>
             </div>
           </dd>
 
           <dt>mining</dt>
-          <dd id="stat-mine">
-            <div class="statline">
-              <span class="stattext" id="text-mine">–</span>
-              <span class="statpct" id="pct-mine">–</span>
-            </div>
-            <div class="progress" aria-hidden="true">
-              <div class="progress-bar" id="bar-mine" style="width:0%"></div>
+          <dd>
+            <div class="statrow">
+              <div class="progress" aria-hidden="true">
+                <div class="progress-bar" id="bar-mine" style="width:0%"></div>
+              </div>
+              <span class="level" id="text-mine">–</span>
             </div>
           </dd>
 
           <dt>fishing</dt>
-          <dd id="stat-fish">
-            <div class="statline">
-              <span class="stattext" id="text-fish">–</span>
-              <span class="statpct" id="pct-fish">–</span>
-            </div>
-            <div class="progress" aria-hidden="true">
-              <div class="progress-bar" id="bar-fish" style="width:0%"></div>
+          <dd>
+            <div class="statrow">
+              <div class="progress" aria-hidden="true">
+                <div class="progress-bar" id="bar-fish" style="width:0%"></div>
+              </div>
+              <span class="level" id="text-fish">–</span>
             </div>
           </dd>
         </dl>
@@ -70,11 +77,36 @@
   <!-- Game logic -->
   <script src="/game/game.js" defer></script>
 
-  <!-- IMPORTANT: This page is *intentionally limited* to a single link back to home.
-       Do not add the global `pages.js` include here, otherwise extra links will appear. -->
   <script>
-    window.SITE_PAGES = [{ slug: "/", label: "home" }];
+    (function () {
+      const GAP = 24; // px gap between arena and bottom of the screen
+      const arena = document.getElementById('arena');
+
+      function fitArena() {
+        if (!arena) return;
+
+        // Temporarily unset height to measure true top position
+        arena.style.height = 'auto';
+        const top = arena.getBoundingClientRect().top; // px from viewport top to arena top
+
+        // Remaining space minus our desired bottom gap
+        const available = Math.max(140, Math.floor(window.innerHeight - GAP - top));
+        arena.style.height = available + 'px';
+      }
+
+      // Re-fit on common resizes and after fonts load (text height can change)
+      window.addEventListener('resize', fitArena);
+      window.addEventListener('orientationchange', fitArena);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitArena);
+      window.addEventListener('load', fitArena);
+
+      // First run
+      fitArena();
+    })();
   </script>
-  <script src="/links.js" defer></script>
+
+  <script src="/theme.js" defer></script>
+  <script src="/favicon.js" defer></script>
+
 </body>
 </html>

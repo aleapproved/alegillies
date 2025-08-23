@@ -97,7 +97,7 @@
     el.className = 'node';
     el.setAttribute('aria-label', label);
     el.dataset.baseLabel = label; // remember the clean, non-critical label
-    el.textContent = emoji;
+    el.innerHTML = `<span class="glyph">${emoji}</span>`;
     el.dataset.kind = kind;
     el.addEventListener('click', () => bump(kind));
     arena.appendChild(el);

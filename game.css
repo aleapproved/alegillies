@@ -52,11 +52,43 @@
   border: none;
   font-family: "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji","Twemoji Mozilla", system-ui, sans-serif;
   transition: transform 80ms ease, filter 120ms ease, opacity 120ms ease;
-  /* Prevent grey highlight / callouts on mobile */
+
+  /* Mobile selection & highlight hard-kill */
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: manipulation;
+  caret-color: transparent;
 }
+
+/* Make sure no UA focus ring/shadow shows on tap */
+.node:focus,
+.node:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Belt-and-braces: suppress tap highlight on ancestors too */
+html, body, .arena { -webkit-tap-highlight-color: transparent; }
+
+/* Firefox mobile’s inner focus border */
+.node::-moz-focus-inner { border: 0; }
+
+/* Keep keyboard a11y outline for desktop users only */
+@media (hover: hover) and (pointer: fine) {
+  .node:focus-visible { outline: 2px solid var(--line); }
+}
+
+/* Ensure the emoji glyph itself can’t be selected or long-pressed */
+.node .glyph {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  pointer-events: none; /* taps go to the button */
+}
+
 .node:focus-visible { outline: 2px solid var(--line); }
 
 /* New: subtle click feedback */

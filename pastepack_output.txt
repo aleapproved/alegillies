@@ -1,0 +1,1391 @@
+PASTE‑PACK BUNDLE — multi‑file paste for ChatGPT
+Generated: 2025-08-25T19:10:36.242718+00:00
+Paths: C:\Users\aless\Coding\GitHub\alegillies
+Files included: 14; Total bytes: 41711
+Notes: Each file starts with a <<<FILE ...>>> header and ends with <<<END FILE>>>.
+Please treat each file separately when reviewing.
+
+==============================================================================
+<<<FILE path="base.css" abspath="C:\Users\aless\Coding\GitHub\alegillies\base.css" size=5422 mtime="2025-08-25T19:09:29.368874+00:00" sha256="48e2a24a97f73ef8b61f08b2f28d4a8c11adba33ab515983bac748e03f724d06" lang="css">>>
+```css
+:root {
+  --bg: #ffffff;
+  --text: #0a0a0a;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+
+  /* New UI tokens */
+  --accent: #3b82f6;
+  --accent-weak: #93c5fd;
+  --good: #22c55e;
+}
+
+[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --text: #f5f5f5;
+  --muted: #a3a3a3;
+  --line: #333;
+
+  --accent: #60a5fa;
+  --accent-weak: #2563eb;
+  --good: #4ade80;
+}
+
+/* Disable transitions during first paint to avoid flashes */
+.no-anim *, .no-anim *::before, .no-anim *::after { transition: none !important; }
+
+/* Always reserve scrollbar space so layout width is identical on all pages */
+html { overflow-y: scroll; }
+
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.65;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+@media (prefers-reduced-motion: reduce) { body { transition: none; } }
+
+.wrap { width: min(50rem, 100%); padding: 0 1.25rem; margin: 10vh 0; }
+
+h1 { font-size: clamp(2.5rem, 6vw, 3.25rem); margin: 0 0 0.25rem; letter-spacing: -0.01em; }
+h1 a { color: inherit; text-decoration: none; border-bottom: none; }
+h1 a:hover, h1 a:focus-visible { color: var(--muted); text-decoration: underline; }
+
+hr { border: none; border-top: 1px solid var(--line); margin: 2rem 0; }
+
+p { margin: 0 0 1rem; font-size: 1.15rem; max-width: 72ch; }
+
+a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  transition: color 140ms ease, border-color 140ms ease;
+  text-underline-offset: 3px;
+}
+a:hover, a:focus-visible { border-bottom-color: currentColor; outline: none; }
+
+/* ---------- Theme toggle ---------- */
+.toggle {
+  position: fixed; top: 1rem; right: 1rem; z-index: 30;
+  background: color-mix(in oklab, var(--bg) 75%, transparent);
+  backdrop-filter: saturate(1.2) blur(8px);
+  -webkit-backdrop-filter: saturate(1.2) blur(8px);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .45rem .65rem;
+  font-size: .9rem;
+  cursor: pointer;
+}
+.toggle:hover, .toggle:focus-visible { border-color: currentColor; outline: none; }
+
+/* ---------- Wandering links (desktop) ---------- */
+.floatingLink {
+  position: absolute;
+  font-weight: 500;
+  border-bottom: none;
+  color: var(--muted);
+  text-transform: lowercase;
+  transition: color 0.2s ease, opacity 0.4s ease, transform 0.15s ease;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  padding: .25rem .4rem;
+}
+.floatingLink.ready { opacity: 1; pointer-events: auto; }
+.floatingLink:hover, .floatingLink:focus-visible { transform: translateY(-2px); outline: none; }
+
+/* ---------- Bottom link rail (mobile) ---------- */
+#linkRail {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  display: flex; align-items: center; gap: .5rem;
+  padding: .5rem clamp(.5rem, 4vw, 1rem);
+  padding-bottom: calc(.5rem + env(safe-area-inset-bottom));
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+
+  background: color-mix(in oklab, var(--bg) 75%, transparent);
+  backdrop-filter: saturate(1.2) blur(8px);
+  -webkit-backdrop-filter: saturate(1.2) blur(8px);
+
+  border-top: 1px solid var(--line);
+}
+
+/* Chip styling inside the rail */
+#linkRail .floatingLink {
+  position: static;
+  opacity: 1;
+  pointer-events: auto;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .45rem .7rem;
+  margin: 0;
+  white-space: nowrap;
+  font-size: 1rem;
+  scroll-snap-align: start;
+  background: color-mix(in oklab, var(--bg) 88%, transparent);
+  backdrop-filter: saturate(1.1) blur(6px);
+  -webkit-backdrop-filter: saturate(1.1) blur(6px);
+}
+
+/* Give space so the fixed rail doesn't cover content */
+body.rail-active { padding-bottom: 4.5rem; }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .floatingLink { transition: none; }
+  #linkRail { scroll-behavior: auto; }
+}
+
+/* ---------- CV: unified spacing & typography ---------- */
+.section-title { margin: 2.25rem 0 1rem; font-size: 1.65rem; font-weight: 600; text-transform: lowercase; }
+.org-block { margin: 1rem 0 1.25rem; }
+.section-title + .org-block { margin-top: 0.25rem; }
+.org-name { font-weight: 600; margin: 0 0 .35rem; }
+.role-list { list-style: none; margin: 0; padding: 0; }
+.role-item {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: .35rem 1rem; padding: .25rem 0; align-items: baseline;
+}
+.dates { color: var(--muted); font-size: .95rem; white-space: nowrap; }
+
+@media (max-width: 720px) {
+  .role-item { grid-template-columns: 1fr; gap: .15rem; }
+  .dates { order: 3; }
+}
+
+.wrap > *:not(h1):not(hr) { max-width: 72ch; }
+
+@media (max-width: 720px) {
+  .section-title { font-size: 1.5rem; margin-top: 2rem; }
+  p { font-size: 1.05rem; line-height: 1.6; }
+  .role-item { grid-template-columns: 1fr; gap: 0.1rem; padding: 0.15rem 0; }
+  .org-name { font-size: 1.1rem; }
+  .dates { font-size: 0.95rem; }
+  .edu-line { display: block; margin: 0 0 0.35rem; }
+}
+
+/* ---------- Fallback for browsers without backdrop-filter ---------- */
+@supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+  #linkRail { background: var(--bg); }
+  .toggle   { background: var(--bg); }
+}
+
+@supports not (background: color-mix(in oklab, white 75%, transparent)) {
+  #linkRail, .toggle { background: var(--bg); }
+}
+
+a.no-underline {
+  border-bottom: none !important;
+}
+```
+<<<END FILE>>>
+==============================================================================
+
+==============================================================================
+<<<FILE path="contact/index.html" abspath="C:\Users\aless\Coding\GitHub\alegillies\contact\index.html" size=1524 mtime="2025-08-25T19:09:39.980243+00:00" sha256="19f036e6af1822a02575124416a05d8bcc317b2a55eb3ecdc35195aaa4f456d1" lang="html">>>
+```html
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>contact — alegilli.es</title>
+
+  <!-- Prevent white flash -->
+  <script src="/theme-init.js"></script>
+
+  <meta name="description" content="contact — get in touch with alegilli.es" />
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests">
+
+  <link id="favicon" rel="icon" type="image/svg+xml" href="">
+
+  <link rel="stylesheet" href="/base.css?v=5">
+</head>
+<body data-page="contact">
+
+  <button class="toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode">☀️/🌙</button>
+
+  <div class="wrap">
+    <h1>contact</h1>
+    <hr>
+    <p><a href="mailto:hello@alegilli.es" class="no-underline">hello@alegilli.es</a></p>
+  </div>
+
+  <script src="/pages.js" defer></script>
+  <script src="/theme.js" defer></script>
+  <script src="/favicon.js" defer></script>
+  <script src="/nav.js" defer></script>
+  <script src="/nav-layout.js" defer></script>
+
+</body>
+</html>
+```
+<<<END FILE>>>
+==============================================================================
+
+==============================================================================
+<<<FILE path="cv/index.html" abspath="C:\Users\aless\Coding\GitHub\alegillies\cv\index.html" size=3326 mtime="2025-08-23T15:20:15.417394+00:00" sha256="95a34ab3209953261fcf7db792c1f26ed65b83bd0f953410fdab57592f09612c" lang="html">>>
+```html
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>cv — alegilli.es</title>
+
+  <!-- Prevent white flash by setting theme before paint -->
+  <script src="/theme-init.js"></script>
+
+  <meta name="description" content="Alessandro Gillies — CV: experience and education." />
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests">
+
+  <link rel="stylesheet" href="/base.css?v=5">
+
+  <link id="favicon" rel="icon" type="image/svg+xml" href="">
+  
+</head>
+<body data-page="cv">
+  <div class="wrap">
+    <h1>cv</h1>
+    <hr>
+
+    <h2 class="section-title">experience</h2>
+
+    <div class="org-block">
+      <div class="org-name">Foreign, Commonwealth and Development Office</div>
+      <ul class="role-list">
+        <li class="role-item">
+          <div>Senior Product Manager</div>
+          <div class="dates">Aug 2024 – Present</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="org-block">
+      <div class="org-name">Government Digital Service</div>
+      <ul class="role-list">
+        <li class="role-item">
+          <div>Senior Strategy &amp; Policy Adviser</div>
+          <div class="dates">Mar 2022 – Aug 2024</div>
+        </li>
+        <li class="role-item">
+          <div>Associate Product Manager</div>
+          <div class="dates">May 2021 – Mar 2022</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="org-block">
+      <div class="org-name">Cabinet Office</div>
+      <ul class="role-list">
+        <li class="role-item">
+          <div>Policy Adviser</div>
+          <div class="dates">Oct 2019 – May 2021</div>
+        </li>
+        <li class="role-item">
+          <div>Associate Policy Adviser</div>
+          <div class="dates">Mar 2019 – Oct 2019</div>
+        </li>
+        <li class="role-item">
+          <div>Co-Chair, Cabinet Office LGBT+ Network</div>
+          <div class="dates">Jan 2020 – Dec 2021</div>
+        </li>
+      </ul>
+    </div>
+
+    <h2 class="section-title">education</h2>
+
+    <div class="org-block">
+      <div class="org-name">University of Aberdeen</div>
+      <ul class="role-list">
+        <li class="role-item">
+          <div>BSc Mathematics &amp; Physics — First-class honours</div>
+          <div class="dates">2014 – 2018</div>
+        </li>
+        <li class="role-item">
+          <div>One-year exchange at the University of British Columbia</div>
+          <div class="dates">2015 – 2016</div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <button class="toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode">☀️/🌙</button>
+  <script src="/pages.js" defer></script>
+  <script src="/theme.js" defer></script>
+  <script src="/favicon.js" defer></script>
+  <script src="/nav.js" defer></script>
+  <script src="/nav-layout.js" defer></script>
+</body>
+</html>
+```
+<<<END FILE>>>
+==============================================================================
+
+==============================================================================
+<<<FILE path="favicon.js" abspath="C:\Users\aless\Coding\GitHub\alegillies\favicon.js" size=1807 mtime="2025-08-25T18:55:21.466107+00:00" sha256="3a57c3681356c56ba4d292b4b8569e08f24cfb18a1ff36ecacc1276ed988e504" lang="javascript">>>
+```javascript
+// favicon.js
+(function () {
+  function pageLetter() {
+    const bodyAttr = document.body && document.body.getAttribute('data-page');
+    const id = (bodyAttr || '').toLowerCase() || (location.pathname || '/').toLowerCase();
+    if (id.includes('cv') || id.includes('/cv')) return 'c';
+    if (id.includes('malaphors') || id.includes('/malaphors')) return 'm';
+    if (id.includes('game') || id.includes('/game')) return 'g';
+    if (id.includes('contact') || id.includes('/contact')) return '@';
+    return 'a';
+  }
+
+  function makeIcon(letter, isDark) {
+    const bg = isDark ? 'black' : 'white';
+    const fg = isDark ? 'white' : 'black';
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="${bg}"/><text x="50" y="68" font-size="64" text-anchor="middle" fill="${fg}" font-family="sans-serif">${letter}</text></svg>`;
+    return 'data:image/svg+xml,' + encodeURIComponent(svg);
+  }
+
+  function ensureLink() {
+    let link = document.getElementById('favicon');
+    if (!link) {
+      link = document.createElement('link');
+      link.id = 'favicon';
+      link.rel = 'icon';
+      link.type = 'image/svg+xml';
+      document.head.appendChild(link);
+    }
+    return link;
+  }
+
+  function updateFavicon() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    ensureLink().setAttribute('href', makeIcon(pageLetter(), isDark));
+  }
+
+  // Initial set and on theme changes
+  function init() {
+    updateFavicon();
+    window.addEventListener((window.Theme && window.Theme.EVT) || 'themechange', updateFavicon);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+})();
+```
+<<<END FILE>>>
+==============================================================================
+
+==============================================================================
+<<<FILE path="game.css" abspath="C:\Users\aless\Coding\GitHub\alegillies\game.css" size=4572 mtime="2025-08-23T15:47:13.864103+00:00" sha256="88f08dfb1718db19d035deacee7178a85a75a962218717a246763140a26e95ee" lang="css">>>
+```css
+/* 2-column layout that collapses on small screens */
+.game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 860px) { .game-grid { grid-template-columns: 1fr; } }
+
+/* Stats list */
+.stats dt { opacity: .7; }
+.stats dd { margin: 0 0 .8rem; }
+
+/* New: stat header line and progress bar */
+.statline {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .75rem;
+  margin: 0 0 .25rem;
+  font-weight: 600;
+}
+.stattext { opacity: .9; }
+.statpct { color: var(--muted); font-weight: 500; }
+.progress {
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--line) 70%, transparent);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-weak));
+  transition: width 120ms ease;
+}
+
+/* Play area: use site border + rounding so it matches cards/toggles */
+.arena {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* Clickable emoji nodes */
+.node {
+  position: absolute;
+  font-size: clamp(28px, 6vw, 42px);
+  cursor: pointer;
+  user-select: none;
+  line-height: 1;
+  padding: .25rem;
+  border-radius: 12px;
+  background: transparent;
+  border: none;
+  font-family: "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji","Twemoji Mozilla", system-ui, sans-serif;
+  transition: transform 80ms ease, filter 120ms ease, opacity 120ms ease;
+
+  /* Mobile selection & highlight hard-kill */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: manipulation;
+  caret-color: transparent;
+}
+
+/* Make sure no UA focus ring/shadow shows on tap */
+.node:focus,
+.node:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Belt-and-braces: suppress tap highlight on ancestors too */
+html, body, .arena { -webkit-tap-highlight-color: transparent; }
+
+/* Firefox mobile’s inner focus border */
+.node::-moz-focus-inner { border: 0; }
+
+/* Keep keyboard a11y outline for desktop users only */
+@media (hover: hover) and (pointer: fine) {
+  .node:focus-visible { outline: 2px solid var(--line); }
+}
+
+/* Ensure the emoji glyph itself can’t be selected or long-pressed */
+.node .glyph {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  pointer-events: none; /* taps go to the button */
+}
+
+.node:focus-visible { outline: 2px solid var(--line); }
+
+/* New: subtle click feedback */
+.node:active { transform: scale(0.96); }
+
+/* New: critical node visual – 2× scale + gentle glow + ✨ marker */
+.node.crit {
+  transform: scale(2);
+  filter: drop-shadow(0 0 6px color-mix(in oklab, var(--accent) 60%, transparent));
+}
+.node.crit::after {
+  content: "✨";
+  position: absolute;
+  top: -0.35em;
+  right: -0.25em;
+  font-size: 0.9em;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* New: level-up toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%) translateY(16px);
+  background: color-mix(in oklab, var(--bg) 85%, transparent);
+  backdrop-filter: saturate(1.2) blur(10px);
+  -webkit-backdrop-filter: saturate(1.2) blur(10px);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: .6rem .8rem;
+  font-weight: 600;
+  z-index: 40;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* New: confetti bits */
+.confetti {
+  position: absolute;
+  width: 6px; height: 10px;
+  border-radius: 2px;
+  opacity: 0.9;
+  animation: confetti-fall 600ms ease-out forwards;
+}
+@keyframes confetti-fall {
+  0%   { transform: translateY(0) rotate(0deg);   opacity: 1; }
+  100% { transform: translateY(20px) rotate(120deg); opacity: 0; }
+}
+
+/* One-line skill rows: name | bar | level */
+.stats {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 1rem;
+  row-gap: .5rem;
+  align-items: center;
+}
+.stats dt {
+  margin: 0;
+  opacity: .8;
+}
+.stats dd {
+  margin: 0;
+}
+
+.statrow {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+.statrow .progress { flex: 1; }
+.level {
+  white-space: nowrap;
+  font-weight: 600;
+  opacity: .9;
+}
+
+/* Optional: slimmer bar looks better inline */
+.progress { height: 10px; }
+```
+<<<END FILE>>>
+==============================================================================
+
+==============================================================================
+<<<FILE path="game/game.js" abspath="C:\Users\aless\Coding\GitHub\alegillies\game\game.js" size=8181 mtime="2025-08-23T15:47:56.182868+00:00" sha256="b93c7171333ce93c0eba426242c3c86d953a005402c2f73db1bb1f93ad18778c" lang="javascript">>>
+```javascript
+(function(){
+  const $ = sel => document.querySelector(sel);
+  const arena = $('#arena');
+
+  // Stats containers (text + pct + bars)
+  const textWood = $('#text-wood');
+  const textMine = $('#text-mine');
+  const textFish = $('#text-fish');
+  const pctWood  = $('#pct-wood');
+  const pctMine  = $('#pct-mine');
+  const pctFish  = $('#pct-fish');
+  const barWood  = $('#bar-wood');
+  const barMine  = $('#bar-mine');
+  const barFish  = $('#bar-fish');
+
+  const toastEl  = $('#toast');
+
+  // ---- persistence ----
+  const STORAGE_KEY = 'mini-skill-state-v1';
+  function load(){
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      ['wood','mine','fish'].forEach(k => {
+        if (saved && saved[k]) {
+          state[k].lvl  = Number.isFinite(saved[k].lvl) ? saved[k].lvl : state[k].lvl;
+          state[k].xp   = Number.isFinite(saved[k].xp)  ? saved[k].xp  : state[k].xp;
+          state[k].next = state[k].lvl >= 99 ? 0 : xpForLevel(state[k].lvl);
+        }
+      });
+    } catch {
+      // ignore corrupt or blocked storage
+    }
+  }
+  function save(){
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch { /* storage may be unavailable in some privacy modes */ }
+  }
+
+  // In-memory state (no persistence beyond localStorage)
+  const state = {
+    wood: { lvl: 1, xp: 0, next: xpForLevel(1) },
+    mine: { lvl: 1, xp: 0, next: xpForLevel(1) },
+    fish: { lvl: 1, xp: 0, next: xpForLevel(1) }
+  };
+
+  // Exponential XP curve, capped at level 99.
+  // Starts at 10 XP for level 1→2 and grows ~15% per level.
+  function xpForLevel(level){
+    const base = 10;
+    const growth = 1.15;
+    return Math.max(10, Math.floor(base * Math.pow(growth, level - 1)));
+  }
+
+  // ASCII-safe strings
+  const SEP = ' \u2013 '; // en dash
+  const EMOJI = {
+    wood: '\u{1F332}',                                      // tree
+    mine: supportsRockEmoji() ? '\u{1FAA8}' : '\u26F0\uFE0F',// rock or mountain
+    fish: '\u{1F41F}'                                       // fish
+  };
+
+  function supportsRockEmoji(){
+    const test = document.createElement('span');
+    test.style.position = 'absolute';
+    test.style.visibility = 'hidden';
+    test.style.fontFamily = '"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji","Twemoji Mozilla", system-ui, sans-serif';
+    test.textContent = '\u{1FAA8}';
+    document.body.appendChild(test);
+    const wRock = test.getBoundingClientRect().width;
+    test.textContent = '\u25A1';
+    const wTofu = test.getBoundingClientRect().width;
+    document.body.removeChild(test);
+    return Math.abs(wRock - wTofu) > 0.5;
+  }
+
+  // RNG helpers
+  function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
+  function chance(p){ return Math.random() < p; }
+
+  // Layout guard – compute positions from client size, not rect
+  function randPos(width, height){
+    const pad = 8;
+    const W = Math.max(pad, arena.clientWidth);
+    const H = Math.max(pad, arena.clientHeight);
+    const maxX = Math.max(pad, W - width  - pad);
+    const maxY = Math.max(pad, H - height - pad);
+    const x = randInt(pad, maxX);
+    const y = randInt(pad, maxY);
+    return {x,y};
+  }
+
+  function makeNode(emoji, label, kind){
+    const el = document.createElement('button');
+    el.className = 'node';
+    el.setAttribute('aria-label', label);
+    el.dataset.baseLabel = label; // remember the clean, non-critical label
+    el.innerHTML = `<span class="glyph">${emoji}</span>`;
+    el.dataset.kind = kind;
+    el.addEventListener('click', () => bump(kind));
+    arena.appendChild(el);
+    placeNode(kind);
+    return el;
+  }
+
+  // Decide crit status and ensure aria-label is reset each spawn
+  function rollCrit(el){
+    if (!el) return false;
+    // Reset to base state every spawn
+    el.classList.remove('crit');
+    el.removeAttribute('data-crit');
+    const base = el.dataset.baseLabel || el.getAttribute('aria-label') || 'node';
+    el.setAttribute('aria-label', base);
+
+    // 5% chance: mark as critical and annotate label
+    const isCrit = chance(0.05);
+    if (isCrit) {
+      el.classList.add('crit');       // visual: 2× scale + ✨ via CSS
+      el.setAttribute('data-crit', '1');
+      el.setAttribute('aria-label', `${base} (critical)`);
+    }
+    return isCrit;
+  }
+
+  // Place node based on its final size (including crit if any)
+  function placeNode(kind){
+    const el = arena.querySelector(`[data-kind="${kind}"]`);
+    if (!el) return;
+
+    // Decide crit FIRST so measurement reflects final size
+    rollCrit(el);
+
+    // Temporarily position at (0,0) to measure current rendered size
+    el.style.left = '0px'; el.style.top = '0px';
+    const rect = el.getBoundingClientRect();
+    const w = rect.width  || 48;
+    const h = rect.height || 48;
+
+    const {x,y} = randPos(w, h);
+    el.style.left = x + 'px';
+    el.style.top  = y + 'px';
+  }
+
+  function vibrate(ms){
+    try {
+      if (navigator && navigator.vibrate) navigator.vibrate(ms);
+    } catch { /* ignore */ }
+  }
+
+  function showToast(text){
+    if (!toastEl) return;
+    toastEl.textContent = text;
+    toastEl.classList.add('show');
+    // auto-hide
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toastEl.classList.remove('show'), 1400);
+  }
+
+  function popConfetti(x, y){
+    // Respect reduced motion
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const colors = ['var(--accent)','var(--good)','var(--text)'];
+    const n = 10;
+    for (let i=0;i<n;i++){
+      const bit = document.createElement('div');
+      bit.className = 'confetti';
+      bit.style.left = (x + randInt(-12, 12)) + 'px';
+      bit.style.top  = (y + randInt(-6, 6)) + 'px';
+      bit.style.background = colors[i % colors.length];
+      arena.appendChild(bit);
+      setTimeout(() => bit.remove(), 700);
+    }
+  }
+
+  function updateStatsUI(){
+    setStatUI('wood', state.wood, textWood, pctWood, barWood);
+    setStatUI('mine', state.mine, textMine, pctMine, barMine);
+    setStatUI('fish', state.fish, textFish, pctFish, barFish);
+  }
+
+  function setStatUI(label, s, textEl, pctEl, barEl){
+  const percent = s.lvl >= 99 ? 100 : Math.floor((s.xp / s.next) * 100);
+  const lvlText = s.lvl >= 99 ? `lvl 99` : `lvl ${s.lvl}`;
+  if (textEl) textEl.textContent = lvlText;
+  if (pctEl)  pctEl.textContent  = s.lvl >= 99 ? 'max' : `${percent}%`; // safe if still present
+  if (barEl)  barEl.style.width  = `${Math.min(100, percent)}%`;
+  }
+
+  function bump(kind){
+    const el = arena.querySelector(`[data-kind="${kind}"]`);
+    const s = state[kind];
+    if (!el || s.lvl >= 99) { placeNode(kind); return; }
+
+    // Mobile haptics
+    vibrate(8);
+
+    // Determine XP gain: 1 or 5 if critical node
+    const isCrit = el.hasAttribute('data-crit');
+    const gain = isCrit ? 5 : 1;
+
+    const preLvl = s.lvl;
+    s.xp += gain;
+
+    // Level loop
+    while (s.xp >= s.next && s.lvl < 99){
+      s.xp -= s.next;
+      s.lvl += 1;
+      s.next = s.lvl >= 99 ? 0 : xpForLevel(s.lvl);
+    }
+
+    updateStatsUI();
+
+    // Level-up feedback (toast + subtle confetti from click location)
+    if (s.lvl > preLvl) {
+      showToast(`${kind} ${SEP} level ${s.lvl}!`);
+      const r = el.getBoundingClientRect();
+      const a = arena.getBoundingClientRect();
+      const cx = r.left - a.left + r.width/2;
+      const cy = r.top  - a.top  + r.height/2;
+      popConfetti(cx, cy);
+      vibrate(16);
+    }
+
+    // Reposition and re-roll crit
+    placeNode(kind);
+    save(); // persist after each interaction
+  }
+
+  function start(){
+    arena.innerHTML = '';
+
+    // load any saved progress before creating UI
+    load();
+
+    makeNode(EMOJI.wood, 'tree', 'wood');
+    makeNode(EMOJI.mine, 'rock', 'mine');
+    makeNode(EMOJI.fish, 'fish', 'fish');
+    updateStatsUI();
+  }
+
+  // Reposition nodes on viewport and arena size changes
+  window.addEventListener('resize', () => ['wood','mine','fish'].forEach(placeNode));
+  if ('ResizeObserver' in window) {
+    const ro = new ResizeObserver(() => ['wood','mine','fish'].forEach(placeNode));
+    ro.observe(arena);
+  }
+
+  start();
+})();
+```
+<<<END FILE>>>
+==============================================================================
+
+==============================================================================
+<<<FILE path="game/index.html" abspath="C:\Users\aless\Coding\GitHub\alegillies\game\index.html" size=3491 mtime="2025-08-23T15:48:31.905088+00:00" sha256="c81723b77a61775eb5eaccc8e1a1d28c87784334463bba70242bc95225093fd1" lang="html">>>
+```html
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>game — alegilli.es</title>
+
+  <!-- Set theme before paint -->
+  <script src="/theme-init.js"></script>
+
+  <meta name="description" content="Minimal clicker game — woodcutting, mining and fishing with a clean aesthetic." />
+
+  <!-- Site CSS -->
+  <link rel="stylesheet" href="/base.css?v=5">
+  <link rel="stylesheet" href="/game.css?v=2">
+
+  <style>
+    /* Only this page: don’t allow vertical scrolling */
+    html { overflow-y: hidden; }
+    /* Trim the big site margin so everything fits comfortably */
+    body[data-page="game"] .wrap { margin: 1.25rem 0; }
+  </style>
+
+</head>
+<body data-page="game">
+
+  <button class="toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode">☀️/🌙</button>
+
+  <div class="wrap">
+    <h1>game</h1>
+    <hr>
+
+    <div class="game-grid">
+      <section>
+        <dl class="stats" aria-live="polite">
+          <dt>woodcutting</dt>
+          <dd>
+            <div class="statrow">
+              <div class="progress" aria-hidden="true">
+                <div class="progress-bar" id="bar-wood" style="width:0%"></div>
+              </div>
+              <span class="level" id="text-wood">–</span>
+            </div>
+          </dd>
+
+          <dt>mining</dt>
+          <dd>
+            <div class="statrow">
+              <div class="progress" aria-hidden="true">
+                <div class="progress-bar" id="bar-mine" style="width:0%"></div>
+              </div>
+              <span class="level" id="text-mine">–</span>
+            </div>
+          </dd>
+
+          <dt>fishing</dt>
+          <dd>
+            <div class="statrow">
+              <div class="progress" aria-hidden="true">
+                <div class="progress-bar" id="bar-fish" style="width:0%"></div>
+              </div>
+              <span class="level" id="text-fish">–</span>
+            </div>
+          </dd>
+        </dl>
+      </section>
+
+      <section>
+        <div class="arena" id="arena" aria-label="play area"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Level-up toast (announced to SR via aria-live) -->
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Game logic -->
+  <script src="/game/game.js" defer></script>
+
+  <script>
+    (function () {
+      const GAP = 24; // px gap between arena and bottom of the screen
+      const arena = document.getElementById('arena');
+
+      function fitArena() {
+        if (!arena) return;
+
+        // Temporarily unset height to measure true top position
+        arena.style.height = 'auto';
+        const top = arena.getBoundingClientRect().top; // px from viewport top to arena top
+
+        // Remaining space minus our desired bottom gap
+        const available = Math.max(140, Math.floor(window.innerHeight - GAP - top));
+        arena.style.height = available + 'px';
+      }
+
+      // Re-fit on common resizes and after fonts load (text height can change)
+      window.addEventListener('resize', fitArena);
+      window.addEventListener('orientationchange', fitArena);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitArena);
+      window.addEventListener('load', fitArena);
+
+      // First run
+      fitArena();
+    })();
+  </script>
+
+  <script src="/theme.js" defer></script>
+  <script src="/favicon.js" defer></script>
+
+</body>
+</html>
+```
+<<<END FILE>>>
+==============================================================================
+
+==============================================================================
+<<<FILE path="index.html" abspath="C:\Users\aless\Coding\GitHub\alegillies\index.html" size=1686 mtime="2025-08-23T15:20:06.925492+00:00" sha256="d9cc2586023a3d3176642c6d71121a1330168981225612d9a58b9f08e383314a" lang="html">>>
+```html
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>alegilli.es</title>
+
+  <!-- Prevent white flash -->
+  <script src="/theme-init.js"></script>
+
+  <meta name="description" content="alegilli.es – friendly and approachable product manager." />
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests">
+
+  <link id="favicon" rel="icon" type="image/svg+xml" href="">
+
+  <link rel="stylesheet" href="/base.css?v=5">
+</head>
+<body data-page="home">
+  <button class="toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode">☀️/🌙</button>
+
+  <div class="wrap">
+    <h1>alegilli.es</h1>
+    <hr>
+    <p>I’m a product manager who brings together user needs and business goals to create great products. Friendly and approachable, I build strong relationships wherever I work. My experience spans highly digital organisations as well as those still early on in their journey.</p>
+  </div>
+
+  <script src="/pages.js" defer></script>
+  <script src="/theme.js" defer></script>
+  <script src="/favicon.js" defer></script>
+  <script src="/nav.js" defer></script>
+  <script src="/nav-layout.js" defer></script>
+
+</body>
+</html>
+```
+<<<END FILE>>>
+==============================================================================
+
+==============================================================================
+<<<FILE path="malaphors/index.html" abspath="C:\Users\aless\Coding\GitHub\alegillies\malaphors\index.html" size=1458 mtime="2025-08-23T15:20:24.549812+00:00" sha256="79f3e373baa80478c3c44e68f77d8680529163358fd2bf3ca62c93b6d87ae567" lang="html">>>
+```html
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>malaphors — alegilli.es</title>
+
+  <!-- Prevent white flash -->
+  <script src="/theme-init.js"></script>
+
+  <meta name="description" content="malaphors — a collection at alegilli.es" />
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests">
+
+  <link id="favicon" rel="icon" type="image/svg+xml" href="">
+
+  <link rel="stylesheet" href="/base.css?v=5">
+</head>
+<body data-page="malaphors">
+
+  <button class="toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode">☀️/🌙</button>
+
+  <div class="wrap">
+    <h1>malaphors</h1>
+    <hr>
+    <p>Let's burn that bridge when we come to it.</p>
+  </div>
+
+  <script src="/pages.js" defer></script>
+  <script src="/theme.js" defer></script>
+  <script src="/favicon.js" defer></script>
+  <script src="/nav.js" defer></script>
+  <script src="/nav-layout.js" defer></script>
+
+</body>
+</html>
+```
+<<<END FILE>>>
+==============================================================================
+
+==============================================================================
+<<<FILE path="nav-layout.js" abspath="C:\Users\aless\Coding\GitHub\alegillies\nav-layout.js" size=4142 mtime="2025-08-23T15:12:13.964753+00:00" sha256="8c64e5f4417c2a201d23973f5b0768cf5977fa96a679d4aab473fa0087f5a1e1" lang="javascript">>>
+```javascript
+// nav-layout.js
+(function () {
+  let rail = null;
+  let railActive = false;
+
+  function getWrapRect() {
+    const wrap = document.querySelector('.wrap');
+    if (!wrap) {
+      const w = Math.min(800, window.innerWidth);
+      const left = (window.innerWidth - w) / 2;
+      return { left, right: left + w, width: w };
+    }
+    return wrap.getBoundingClientRect();
+  }
+
+  function ensureRail() {
+    if (!rail) {
+      rail = document.createElement('nav');
+      rail.id = 'linkRail';
+      rail.setAttribute('aria-label', 'site links');
+      document.body.appendChild(rail);
+    }
+    return rail;
+  }
+
+  function activateRail() {
+    if (railActive) return;
+    const links = Array.from(document.querySelectorAll('.floatingLink'));
+    if (links.length === 0) { deactivateRail(); return; }
+
+    ensureRail();
+    // Shuffle for variety
+    for (let i = links.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [links[i], links[j]] = [links[j], links[i]];
+    }
+    links.forEach(a => {
+      a.classList.add('chip');
+      a.style.top = '';
+      a.style.left = '';
+      a.style.right = '';
+      rail.appendChild(a);
+      a.classList.add('ready');
+      a.style.display = '';
+    });
+    document.body.classList.add('rail-active');
+    railActive = true;
+  }
+
+  function deactivateRail() {
+    if (!railActive) return;
+    document.querySelectorAll('#linkRail .floatingLink').forEach(a => {
+      a.classList.remove('chip');
+      document.body.appendChild(a);
+    });
+    if (rail) { rail.remove(); rail = null; }
+    document.body.classList.remove('rail-active');
+    railActive = false;
+  }
+
+  function positionLinks() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const rect = getWrapRect();
+
+    const gutterLeft  = Math.max(0, rect.left);
+    const gutterRight = Math.max(0, vw - rect.right);
+    const largestGutter = Math.max(gutterLeft, gutterRight);
+
+    const links = document.querySelectorAll('.floatingLink');
+
+    const useRail = (largestGutter < 48) || (vw < 720);
+    if (useRail) {
+      if (links.length > 0) activateRail(); else deactivateRail();
+      return;
+    }
+
+    deactivateRail();
+
+    const minSpacing = 48;
+    const placedYs = [];
+
+    links.forEach(link => {
+      let side     = link.dataset.side;
+      let xPercent = parseFloat(link.dataset.xPercent);
+      let yPercent = parseFloat(link.dataset.yPercent);
+
+      if (!side || isNaN(xPercent) || isNaN(yPercent)) {
+        side     = Math.random() > 0.5 ? 'left' : 'right';
+        xPercent = Math.random();
+        yPercent = 0.10 + Math.random() * 0.80;
+        link.dataset.side = side;
+        link.dataset.xPercent = xPercent;
+        link.dataset.yPercent = yPercent;
+      }
+
+      const maxY = vh - 16;
+      let y = Math.min(maxY, Math.max(8, yPercent * vh));
+      let tries = 0;
+
+      while (tries < 20) {
+        const clash = placedYs.some(otherY => Math.abs(y - otherY) < minSpacing);
+        if (!clash) break;
+        y += minSpacing;
+        if (y > maxY) y = 8;
+        tries++;
+      }
+      placedYs.push(y);
+      link.style.top = `${y}px`;
+
+      const linkWidth = link.getBoundingClientRect().width || 120;
+      const gutter = side === 'left' ? gutterLeft : gutterRight;
+      const usable = Math.max(0, gutter - linkWidth);
+      const x = 0.10 * usable + xPercent * 0.80 * usable;
+
+      if (side === 'left') {
+        link.style.left  = `${x}px`;
+        link.style.right = '';
+      } else {
+        link.style.right = `${x}px`;
+        link.style.left  = '';
+      }
+
+      link.classList.add('ready');
+      link.style.display = '';
+    });
+  }
+
+  // Reposition on:
+  window.addEventListener('resize', () => requestAnimationFrame(positionLinks));
+  window.addEventListener('orientationchange', positionLinks);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(positionLinks);
+  }
+  window.addEventListener('load', positionLinks);
+  window.addEventListener('nav:ready', positionLinks);
+})();
+```
+<<<END FILE>>>
+==============================================================================
+
+==============================================================================
+<<<FILE path="nav.js" abspath="C:\Users\aless\Coding\GitHub\alegillies\nav.js" size=1713 mtime="2025-08-23T15:12:00.968583+00:00" sha256="cb542adc48a020a3bb53bed2ec2860477155003aba9a7d4ecb0c3b93eb733a3b" lang="javascript">>>
+```javascript
+// nav.js
+(function () {
+  function normalizeCurrentSlug() {
+    const raw = window.location.pathname || '/';
+    const path = raw.replace(/\/+$/, '') || '/';
+    if (path === '/' || path.toLowerCase() === '/index.html') return '/';
+    const parts = path.split('/').filter(Boolean);
+    const last = parts[parts.length - 1]?.toLowerCase();
+    if (last === 'index.html') {
+      const parent = parts.slice(0, -1).join('/');
+      return parent ? `/${parent}/` : '/';
+    }
+    return `/${parts.join('/')}/`;
+  }
+
+  function build() {
+    const pages = window.SITE_PAGES;
+    if (!Array.isArray(pages)) return false;
+
+    const here = normalizeCurrentSlug();
+
+    pages.forEach(p => {
+      const slug = p.slug || '';
+      const isExternal = slug.startsWith('http');
+      const isCurrent = !isExternal && slug === here;
+      if (isCurrent) return;
+
+      const a = document.createElement('a');
+      a.href = slug;
+      a.textContent = p.label;
+      a.className = 'floatingLink';
+      a.tabIndex = 0;
+      if (isExternal) {
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+      }
+      document.body.appendChild(a);
+    });
+    return true;
+  }
+
+  function init() {
+    if (build()) {
+      // Let layout decide where they live
+      window.dispatchEvent(new CustomEvent('nav:ready'));
+    } else {
+      // Retry once when pages arrive
+      window.addEventListener('pages:ready', () => { build(); window.dispatchEvent(new CustomEvent('nav:ready')); }, { once: true });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+})();
+```
+<<<END FILE>>>
+==============================================================================
+
+==============================================================================
+<<<FILE path="pages.js" abspath="C:\Users\aless\Coding\GitHub\alegillies\pages.js" size=265 mtime="2025-08-25T18:55:05.234713+00:00" sha256="503e2a01aa10791d863ec82f186c8240bb4cc063be4184510c6161e6f728968f" lang="javascript">>>
+```javascript
+window.SITE_PAGES = [
+  { slug: "/", label: "home" },
+  { slug: "/malaphors/", label: "malaphors" },
+  { slug: "/cv/", label: "cv" },
+  { slug: "/contact/", label: "contact" },
+  { slug: "https://www.linkedin.com/in/alessandrogillies/", label: "linkedin" }
+];
+```
+<<<END FILE>>>
+==============================================================================
+
+==============================================================================
+<<<FILE path="theme-init.js" abspath="C:\Users\aless\Coding\GitHub\alegillies\theme-init.js" size=2648 mtime="2025-08-25T18:55:48.783346+00:00" sha256="ada46d4432bf8480ff99383efd28434a3ce06c17d6c94c5cd441229499b81404" lang="javascript">>>
+```javascript
+(function () {
+  try {
+    // Prevent any transitions during first paint
+    document.documentElement.classList.add('no-anim');
+
+    // Decide theme before the page paints
+    const stored = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (stored === 'dark' || (!stored && prefersDark)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+
+    // Set an initial favicon before paint to avoid grey globe
+    (function setInitialFavicon(){
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const path = (location.pathname || '/').toLowerCase();
+      const letter = path.includes('/cv') ? 'c'
+                    : path.includes('/malaphors') ? 'm'
+                    : path.includes('/game') ? 'g'
+                    : path.includes('/contact') ? '@'
+                    : 'a';
+      const bg = isDark ? 'black' : 'white';
+      const fg = isDark ? 'white' : 'black';
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="${bg}"/><text x="50" y="68" font-size="64" text-anchor="middle" fill="${fg}" font-family="sans-serif">${letter}</text></svg>`;
+      const href = 'data:image/svg+xml,' + encodeURIComponent(svg);
+
+      let link = document.getElementById('favicon');
+      if (!link) {
+        link = document.createElement('link');
+        link.id = 'favicon';
+        link.rel = 'icon';
+        link.type = 'image/svg+xml';
+        document.head.appendChild(link);
+      }
+      link.setAttribute('href', href);
+    })();
+
+    // After the DOM is ready, allow transitions again
+    const enableTransitions = () => {
+      // next frame avoids reflow flashes
+      requestAnimationFrame(() => {
+        document.documentElement.classList.remove('no-anim');
+
+        // Also set initial aria-pressed on the toggle for perfect a11y parity
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const btn = document.getElementById('themeToggle');
+        if (btn) btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', enableTransitions);
+    } else {
+      enableTransitions();
+    }
+  } catch (e) {
+    // Fail closed: remove the guard if anything goes wrong
+    document.documentElement.classList.remove('no-anim');
+  }
+})();
+```
+<<<END FILE>>>
+==============================================================================
+
+==============================================================================
+<<<FILE path="theme.js" abspath="C:\Users\aless\Coding\GitHub\alegillies\theme.js" size=1476 mtime="2025-08-23T15:11:20.346182+00:00" sha256="c41499397723a41999e9a215fceb26db12aacda9654472bb4d122bd5a2725d62" lang="javascript">>>
+```javascript
+// theme.js
+(function () {
+  const ROOT = document.documentElement;
+  const EVT = 'themechange';
+
+  function getTheme() {
+    return ROOT.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  }
+
+  function setTheme(next) {
+    const value = next === 'dark' ? 'dark' : 'light';
+    if (value === 'dark') {
+      ROOT.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      ROOT.removeAttribute('data-theme');
+      localStorage.removeItem('theme');
+    }
+
+    // Reflect on the toggle if present
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.setAttribute('aria-pressed', value === 'dark' ? 'true' : 'false');
+
+    // Notify listeners
+    window.dispatchEvent(new CustomEvent(EVT, { detail: { theme: value } }));
+  }
+
+  // Expose small API
+  window.Theme = { getTheme, setTheme, EVT };
+
+  // Wire up the toggle button if present
+  function initToggle() {
+    const btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const next = getTheme() === 'dark' ? 'light' : 'dark';
+      setTheme(next);
+    });
+    // Ensure correct aria-pressed on load
+    btn.setAttribute('aria-pressed', getTheme() === 'dark' ? 'true' : 'false');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initToggle, { once: true });
+  } else {
+    initToggle();
+  }
+})();
+```
+<<<END FILE>>>
+==============================================================================
+

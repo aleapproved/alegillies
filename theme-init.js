@@ -19,6 +19,7 @@
       const letter = path.includes('/cv') ? 'c'
                     : path.includes('/malaphors') ? 'm'
                     : path.includes('/game') ? 'g'
+                    : path.includes('/contact') ? '@'
                     : 'a';
       const bg = isDark ? 'black' : 'white';
       const fg = isDark ? 'white' : 'black';

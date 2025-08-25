@@ -18,7 +18,7 @@ Usage:
   python pastepack.py <path> [<path> ...]
 
   Examples
-    # Everything under current folder, to clipboard
+    # Everything under current folder, to clipboard and pastepack_output.txt
     python pastepack.py .
 
     # Only src and package.json, save to a file as well
@@ -50,7 +50,8 @@ from typing import Iterable, List, Optional, Tuple
 DEFAULT_EXCLUDES = [
     ".git", "node_modules", "dist", "build", "out", "coverage", ".venv", "venv",
     "__pycache__", ".DS_Store", "*.pyc", "*.pyo", "*.class",
-    "pastepack.py",   # exclude the tool itself
+    "pastepack.py",            # exclude the tool itself (static)
+    "pastepack_output.txt",    # exclude the default output file (static)
 ]
 
 # Reasonable default extension allow-list (empty means all text files)
@@ -307,28 +308,53 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     p.add_argument("--include-hidden", action="store_true", help="Include dotfiles and dotfolders")
     p.add_argument("--max-file-bytes", type=int, default=250_000, help="Skip any single file larger than this")
     p.add_argument("--max-total-bytes", type=int, default=1_500_000, help="Stop when total raw bytes would exceed this")
-    p.add_argument("--out", type=str, default=None, help="Also write the bundle to this file path")
+    # Default output is pastepack_output.txt; users can override with --out
+    p.add_argument("--out", type=str, default="pastepack_output.txt", help="Write the bundle to this file path")
     p.add_argument("--no-clip", action="store_true", help="Do not copy to clipboard; just print/write to file")
     p.add_argument("--quiet", action="store_true", help="Suppress non-error logs")
     return p.parse_args(argv)
 
+
 def main(argv: Optional[List[str]] = None) -> int:
     args = parse_args(argv)
+
     roots = [Path(p) for p in args.paths]
     for r in roots:
         if not r.exists():
             print(f"Error: path not found: {r}", file=sys.stderr)
             return 2
-    entries = list(walk_inputs(roots, args.exclude, include_hidden=args.include_hidden))
+
+    # Dynamically ensure we ignore this script (whatever it's named) and the output file
+    dynamic_excludes: List[str] = []
+    try:
+        dynamic_excludes.append(Path(__file__).name)                 # script basename
+    except Exception:
+        pass
+    if args.out:
+        try:
+            out_path = Path(args.out)
+            dynamic_excludes.append(out_path.name)                   # output basename
+            dynamic_excludes.append(str(out_path.resolve()))         # absolute path for good measure
+        except Exception:
+            dynamic_excludes.append(str(args.out))
+
+    exclude_patterns = list(args.exclude) + dynamic_excludes
+
+    entries = list(walk_inputs(roots, exclude_patterns, include_hidden=args.include_hidden))
+
     if args.ext.strip() == "*":
         allowed_exts = ["*"]
     else:
         allowed_exts = [e.strip() for e in args.ext.split(",") if e.strip()]
+
     entries = filter_by_ext(entries, allowed_exts)
     if not entries:
         print("No files matched your criteria.", file=sys.stderr)
         return 3
+
     bundle_text, warnings = bundle(entries, args.max_file_bytes, args.max_total_bytes)
+
+    # Always write to the chosen --out path (defaults to pastepack_output.txt). Overwrites by default.
     if args.out:
         try:
             Path(args.out).write_text(bundle_text, encoding="utf-8")
@@ -336,6 +362,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                 print(f"Wrote {len(bundle_text)} chars to {args.out}")
         except Exception as e:
             print(f"Failed to write to {args.out}: {e}", file=sys.stderr)
+
     if not args.no_clip:
         ok, err = copy_to_clipboard(bundle_text)
         if ok and not args.quiet:
@@ -345,11 +372,13 @@ def main(argv: Optional[List[str]] = None) -> int:
             print(bundle_text)
     else:
         print(bundle_text)
+
     if warnings and not args.quiet:
         print("\nWarnings:")
         for w in warnings:
             print(f"  - {w}")
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

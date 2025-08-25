@@ -6,6 +6,7 @@
     if (id.includes('cv') || id.includes('/cv')) return 'c';
     if (id.includes('malaphors') || id.includes('/malaphors')) return 'm';
     if (id.includes('game') || id.includes('/game')) return 'g';
+    if (id.includes('contact') || id.includes('/contact')) return '@';
     return 'a';
   }
 

@@ -170,3 +170,8 @@ body.rail-active { padding-bottom: 4.5rem; }
 @supports not (background: color-mix(in oklab, white 75%, transparent)) {
   #linkRail, .toggle { background: var(--bg); }
 }
+
+a.no-underline {
+  border-bottom: none !important;
+  text-decoration: none !important;
+}

@@ -77,8 +77,12 @@
 
     deactivateRail();
 
+    const placed = []; // track { top, bottom } for collision
     const minSpacing = 48;
-    const placedYs = [];
+
+    // Safe vertical band = central 80% of viewport height
+    const vMin = Math.floor(0.10 * vh);
+    const vMax = Math.floor(0.90 * vh);
 
     links.forEach(link => {
       let side     = link.dataset.side;
@@ -88,37 +92,64 @@
       if (!side || isNaN(xPercent) || isNaN(yPercent)) {
         side     = Math.random() > 0.5 ? 'left' : 'right';
         xPercent = Math.random();
-        yPercent = 0.10 + Math.random() * 0.80;
+        yPercent = Math.random();
         link.dataset.side = side;
         link.dataset.xPercent = xPercent;
         link.dataset.yPercent = yPercent;
       }
 
-      const maxY = vh - 16;
-      let y = Math.min(maxY, Math.max(8, yPercent * vh));
-      let tries = 0;
+      // Measure with fallback sizes
+      const rect0 = link.getBoundingClientRect();
+      const linkW = rect0.width  || 120;
+      const linkH = rect0.height || 32;
 
-      while (tries < 20) {
-        const clash = placedYs.some(otherY => Math.abs(y - otherY) < minSpacing);
-        if (!clash) break;
+      // ---- Vertical (central 80% of viewport) ----
+      const yMin = Math.max(8, vMin);
+      const yMax = Math.max(yMin, vMax - linkH); // prevent overflow
+      let y = Math.round(yMin + yPercent * (yMax - yMin));
+
+      // De-clash with simple wrap search inside [yMin, yMax]
+      let tries = 0;
+      function clashes(yVal) {
+        const top = yVal;
+        const bottom = yVal + linkH;
+        return placed.some(p => !(bottom + minSpacing <= p.top || top >= p.bottom + minSpacing));
+      }
+      while (tries < 24 && clashes(y)) {
         y += minSpacing;
-        if (y > maxY) y = 8;
+        if (y > yMax) y = yMin; // wrap within band
         tries++;
       }
-      placedYs.push(y);
+      placed.push({ top: y, bottom: y + linkH });
       link.style.top = `${y}px`;
 
-      const linkWidth = link.getBoundingClientRect().width || 120;
+      // ---- Horizontal (central 80% of gutter) ----
       const gutter = side === 'left' ? gutterLeft : gutterRight;
-      const usable = Math.max(0, gutter - linkWidth);
-      const x = 0.10 * usable + xPercent * 0.80 * usable;
 
-      if (side === 'left') {
-        link.style.left  = `${x}px`;
-        link.style.right = '';
+      // If gutter is too small, pin to its center to avoid overflow
+      if (gutter <= linkW + 16) {
+        if (side === 'left') {
+          link.style.left = `${Math.max(0, Math.floor((gutter - linkW) / 2))}px`;
+          link.style.right = '';
+        } else {
+          link.style.right = `${Math.max(0, Math.floor((gutter - linkW) / 2))}px`;
+          link.style.left = '';
+        }
       } else {
-        link.style.right = `${x}px`;
-        link.style.left  = '';
+        // central 80% of gutter, accounting for the element width
+        const gInnerStart = Math.floor(0.10 * gutter);
+        const gInnerEnd   = Math.floor(0.90 * gutter);
+        const xMin = gInnerStart;
+        const xMax = Math.max(xMin, gInnerEnd - linkW);
+        const x    = Math.round(xMin + xPercent * (xMax - xMin));
+
+        if (side === 'left') {
+          link.style.left  = `${x}px`;
+          link.style.right = '';
+        } else {
+          link.style.right = `${x}px`;
+          link.style.left  = '';
+        }
       }
 
       link.classList.add('ready');

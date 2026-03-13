@@ -175,3 +175,53 @@ a.no-underline {
   border-bottom: none !important;
   text-decoration: none !important;
 }
+
+/* ---------- Profile section (home page) ---------- */
+.profile-section {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2.5rem 2.5rem;
+  align-items: start;
+  margin-bottom: 2rem;
+}
+
+.profile-image {
+  width: 140px;
+  height: 140px;
+  border-radius: 16px;
+  object-fit: cover;
+  flex-shrink: 0;
+  grid-row: 1;
+}
+
+.greeting {
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  margin: 0 0 1rem 0;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  font-weight: 700;
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+}
+
+.profile-section > p {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+@media (max-width: 720px) {
+  .profile-section {
+    gap: 1.25rem;
+  }
+  
+  .profile-image {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .greeting {
+    font-size: 1.75rem;
+  }
+}

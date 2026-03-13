@@ -165,4 +165,32 @@
   }
   window.addEventListener('load', positionLinks);
   window.addEventListener('nav:ready', positionLinks);
+
+  // Smooth viewport height changes for bottom-fixed elements
+  let lastViewportHeight = window.innerHeight;
+  let animationId = null;
+
+  function smoothViewportTransition() {
+    const currentHeight = window.innerHeight;
+    const rail = document.getElementById('linkRail');
+    
+    if (rail && currentHeight !== lastViewportHeight) {
+      const heightDiff = currentHeight - lastViewportHeight;
+      rail.style.transition = 'transform 0.2s ease-out';
+      rail.style.transform = `translateY(${-heightDiff}px)`;
+      
+      setTimeout(() => {
+        rail.style.transition = '';
+        rail.style.transform = '';
+        lastViewportHeight = currentHeight;
+      }, 200);
+    } else {
+      lastViewportHeight = currentHeight;
+    }
+  }
+
+  window.addEventListener('resize', () => {
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = requestAnimationFrame(smoothViewportTransition);
+  });
 })();

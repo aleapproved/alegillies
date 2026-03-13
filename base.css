@@ -70,6 +70,7 @@ a:hover, a:focus-visible { border-bottom-color: currentColor; outline: none; }
   font-size: clamp(1.25rem, 3vw, 1.5rem);
   line-height: 1;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .theme-toggle:focus-visible {

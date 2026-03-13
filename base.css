@@ -229,6 +229,10 @@ a.no-underline {
     gap: 1.25rem;
   }
   
+  .page-header {
+    gap: 1.25rem;
+  }
+  
   .profile-image {
     width: 100px;
     height: 100px;

@@ -43,10 +43,13 @@
       requestAnimationFrame(() => {
         document.documentElement.classList.remove('no-anim');
 
-        // Also set initial aria-pressed on the toggle for perfect a11y parity
+        // Also set initial aria-pressed and emoji on the toggle
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         const btn = document.getElementById('themeToggle');
-        if (btn) btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+        if (btn) {
+          btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+          btn.textContent = isDark ? '🌕' : '☀️';
+        }
       });
     };
     if (document.readyState === 'loading') {

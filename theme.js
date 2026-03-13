@@ -19,7 +19,10 @@
 
     // Reflect on the toggle if present
     const btn = document.getElementById('themeToggle');
-    if (btn) btn.setAttribute('aria-pressed', value === 'dark' ? 'true' : 'false');
+    if (btn) {
+      btn.setAttribute('aria-pressed', value === 'dark' ? 'true' : 'false');
+      btn.textContent = value === 'dark' ? '🌕' : '☀️';
+    }
 
     // Notify listeners
     window.dispatchEvent(new CustomEvent(EVT, { detail: { theme: value } }));
@@ -36,8 +39,10 @@
       const next = getTheme() === 'dark' ? 'light' : 'dark';
       setTheme(next);
     });
-    // Ensure correct aria-pressed on load
-    btn.setAttribute('aria-pressed', getTheme() === 'dark' ? 'true' : 'false');
+    // Ensure correct aria-pressed and icon on load
+    const theme = getTheme();
+    btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+    btn.textContent = theme === 'dark' ? '🌕' : '☀️';
   }
 
   if (document.readyState === 'loading') {

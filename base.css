@@ -194,21 +194,34 @@ a.no-underline {
   grid-row: 1;
 }
 
+.profile-section h1,
+.page-header h1 {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+}
+
 .greeting {
   font-size: clamp(2rem, 5vw, 2.8rem);
   margin: 0 0 1rem 0;
   letter-spacing: -0.02em;
   line-height: 1.15;
   font-weight: 700;
-  grid-column: 2;
-  grid-row: 1;
-  align-self: end;
 }
 
 .profile-section > p {
   grid-column: 1 / -1;
   margin: 0;
   font-size: 1.15rem;
+}
+
+/* ---------- Page header (other pages) ---------- */
+.page-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2.5rem;
+  align-items: start;
+  margin-bottom: 2rem;
 }
 
 @media (max-width: 720px) {

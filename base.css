@@ -60,19 +60,19 @@ a {
 a:hover, a:focus-visible { border-bottom-color: currentColor; outline: none; }
 
 /* ---------- Theme toggle ---------- */
-.toggle {
+.theme-toggle {
   position: fixed; top: 1rem; right: 1rem; z-index: 30;
-  background: color-mix(in oklab, var(--bg) 75%, transparent);
-  backdrop-filter: saturate(1.2) blur(8px);
-  -webkit-backdrop-filter: saturate(1.2) blur(8px);
-  color: var(--text);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: .45rem .65rem;
-  font-size: .9rem;
+  background: none;
+  border: none;
+  padding: 0;
   cursor: pointer;
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  line-height: 1;
 }
-.toggle:hover, .toggle:focus-visible { border-color: currentColor; outline: none; }
+
+.theme-toggle:focus-visible {
+  outline: none;
+}
 
 /* ---------- Wandering links (desktop) ---------- */
 .floatingLink {
@@ -134,7 +134,13 @@ body.rail-active { padding-bottom: 4.5rem; }
 }
 
 /* ---------- CV: unified spacing & typography ---------- */
-.section-title { margin: 2.25rem 0 1rem; font-size: 1.65rem; font-weight: 600; text-transform: lowercase; }
+h2 { margin: 0; }
+.section-title { margin: 0 0 1rem 0; font-size: 1.65rem; font-weight: 600; text-transform: lowercase; line-height: 1.2; padding-top: 0; }
+.page-header + .section-title {
+  margin-top: 0;
+  padding-top: 0;
+}
+.profile-section + .section-title { margin-top: 0; }
 .org-block { margin: 1rem 0 1.25rem; }
 .section-title + .org-block { margin-top: 0.25rem; }
 .org-name { font-weight: 600; margin: 0 0 .35rem; }
@@ -241,4 +247,6 @@ a.no-underline {
   .greeting {
     font-size: 1.75rem;
   }
+
+
 }

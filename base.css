@@ -25,7 +25,7 @@
 .no-anim *, .no-anim *::before, .no-anim *::after { transition: none !important; }
 
 /* Always reserve scrollbar space so layout width is identical on all pages */
-html { overflow-y: scroll; }
+html { overflow-y: scroll; scroll-behavior: smooth; }
 
 body {
   margin: 0;
@@ -37,6 +37,7 @@ body {
   font-size: 18px;
   line-height: 1.65;
   transition: background 0.25s ease, color 0.25s ease;
+  overscroll-behavior-y: none;
 }
 @media (prefers-reduced-motion: reduce) { body { transition: none; } }
 
@@ -68,6 +69,7 @@ a:hover, a:focus-visible { border-bottom-color: currentColor; outline: none; }
   cursor: pointer;
   font-size: clamp(1.25rem, 3vw, 1.5rem);
   line-height: 1;
+  user-select: none;
 }
 
 .theme-toggle:focus-visible {

@@ -189,8 +189,9 @@ a.no-underline {
 .profile-section {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 2.5rem 2.5rem;
-  align-items: start;
+  column-gap: 2.5rem;
+  row-gap: 1rem;
+  align-items: flex-end;
   margin-bottom: 2rem;
 }
 
@@ -201,13 +202,14 @@ a.no-underline {
   object-fit: cover;
   flex-shrink: 0;
   grid-row: 1;
+  align-self: start;
 }
 
 .profile-section h1,
 .page-header h1 {
   grid-column: 2;
   grid-row: 1;
-  align-self: end;
+  margin-top: auto;
 }
 
 .greeting {
@@ -222,6 +224,7 @@ a.no-underline {
   grid-column: 1 / -1;
   margin: 0;
   font-size: 1.15rem;
+  line-height: 1.4;
 }
 
 /* ---------- Page header (other pages) ---------- */
@@ -229,7 +232,7 @@ a.no-underline {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 2.5rem;
-  align-items: start;
+  align-items: flex-end;
   margin-bottom: 2rem;
 }
 

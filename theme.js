@@ -21,7 +21,8 @@
     const btn = document.getElementById('themeToggle');
     if (btn) {
       btn.setAttribute('aria-pressed', value === 'dark' ? 'true' : 'false');
-      btn.textContent = value === 'dark' ? '🌕' : '☀️';
+      const icon = btn.querySelector('.theme-toggle__icon');
+      if (icon) icon.textContent = value === 'dark' ? '🌕' : '☀️';
     }
 
     // Notify listeners
@@ -42,7 +43,8 @@
     // Ensure correct aria-pressed and icon on load
     const theme = getTheme();
     btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
-    btn.textContent = theme === 'dark' ? '🌕' : '☀️';
+    const icon = btn.querySelector('.theme-toggle__icon');
+    if (icon) icon.textContent = theme === 'dark' ? '🌕' : '☀️';
   }
 
   if (document.readyState === 'loading') {

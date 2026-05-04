@@ -48,7 +48,8 @@
         const btn = document.getElementById('themeToggle');
         if (btn) {
           btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-          btn.textContent = isDark ? '🌕' : '☀️';
+          const icon = btn.querySelector('.theme-toggle__icon');
+          if (icon) icon.textContent = isDark ? '🌕' : '☀️';
         }
       });
     };

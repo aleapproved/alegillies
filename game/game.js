@@ -6,9 +6,6 @@
   const textWood = $('#text-wood');
   const textMine = $('#text-mine');
   const textFish = $('#text-fish');
-  const pctWood  = $('#pct-wood');
-  const pctMine  = $('#pct-mine');
-  const pctFish  = $('#pct-fish');
   const barWood  = $('#bar-wood');
   const barMine  = $('#bar-mine');
   const barFish  = $('#bar-fish');
@@ -177,16 +174,15 @@
   }
 
   function updateStatsUI(){
-    setStatUI('wood', state.wood, textWood, pctWood, barWood);
-    setStatUI('mine', state.mine, textMine, pctMine, barMine);
-    setStatUI('fish', state.fish, textFish, pctFish, barFish);
+    setStatUI('wood', state.wood, textWood, barWood);
+    setStatUI('mine', state.mine, textMine, barMine);
+    setStatUI('fish', state.fish, textFish, barFish);
   }
 
-  function setStatUI(label, s, textEl, pctEl, barEl){
+  function setStatUI(label, s, textEl, barEl){
   const percent = s.lvl >= 99 ? 100 : Math.floor((s.xp / s.next) * 100);
   const lvlText = s.lvl >= 99 ? `lvl 99` : `lvl ${s.lvl}`;
   if (textEl) textEl.textContent = lvlText;
-  if (pctEl)  pctEl.textContent  = s.lvl >= 99 ? 'max' : `${percent}%`; // safe if still present
   if (barEl)  barEl.style.width  = `${Math.min(100, percent)}%`;
   }
 

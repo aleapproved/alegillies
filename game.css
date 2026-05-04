@@ -6,17 +6,6 @@
 .stats dt { opacity: .7; }
 .stats dd { margin: 0 0 .8rem; }
 
-/* New: stat header line and progress bar */
-.statline {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: .75rem;
-  margin: 0 0 .25rem;
-  font-weight: 600;
-}
-.stattext { opacity: .9; }
-.statpct { color: var(--muted); font-weight: 500; }
 .progress {
   height: 8px;
   border-radius: 999px;

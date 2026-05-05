@@ -40,13 +40,8 @@
   }
 
   function init() {
-    if (build()) {
-      // Let layout decide where they live
-      window.dispatchEvent(new CustomEvent('nav:ready'));
-    } else {
-      // Retry once when pages arrive
-      window.addEventListener('pages:ready', () => { build(); window.dispatchEvent(new CustomEvent('nav:ready')); }, { once: true });
-    }
+    build();
+    window.dispatchEvent(new CustomEvent('nav:ready'));
   }
 
   if (document.readyState === 'loading') {

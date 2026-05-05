@@ -2,12 +2,8 @@
 .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 @media (max-width: 860px) { .game-grid { grid-template-columns: 1fr; } }
 
-/* Stats list */
-.stats dt { opacity: .7; }
-.stats dd { margin: 0 0 .8rem; }
-
 .progress {
-  height: 8px;
+  height: 10px;
   border-radius: 999px;
   background: color-mix(in oklab, var(--line) 70%, transparent);
   overflow: hidden;
@@ -162,6 +158,3 @@ html, body, .arena { -webkit-tap-highlight-color: transparent; }
   font-weight: 600;
   opacity: .9;
 }
-
-/* Optional: slimmer bar looks better inline */
-.progress { height: 10px; }

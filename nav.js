@@ -19,7 +19,15 @@
 
     const here = normalizeCurrentSlug();
 
-    pages.forEach(p => {
+    // Fisher–Yates shuffle a copy so each page load gets a fresh order.
+    // (Don't mutate window.SITE_PAGES — other listeners may read it.)
+    const shuffled = pages.slice();
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    shuffled.forEach(p => {
       const slug = p.slug || '';
       const isExternal = slug.startsWith('http');
       const isCurrent = !isExternal && slug === here;
@@ -40,13 +48,8 @@
   }
 
   function init() {
-    if (build()) {
-      // Let layout decide where they live
-      window.dispatchEvent(new CustomEvent('nav:ready'));
-    } else {
-      // Retry once when pages arrive
-      window.addEventListener('pages:ready', () => { build(); window.dispatchEvent(new CustomEvent('nav:ready')); }, { once: true });
-    }
+    build();
+    window.dispatchEvent(new CustomEvent('nav:ready'));
   }
 
   if (document.readyState === 'loading') {

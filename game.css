@@ -1,24 +1,12 @@
+/* Game page only: arena fills the viewport; no vertical scroll. */
+html { overflow-y: hidden; }
+
 /* 2-column layout that collapses on small screens */
 .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 @media (max-width: 860px) { .game-grid { grid-template-columns: 1fr; } }
 
-/* Stats list */
-.stats dt { opacity: .7; }
-.stats dd { margin: 0 0 .8rem; }
-
-/* New: stat header line and progress bar */
-.statline {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: .75rem;
-  margin: 0 0 .25rem;
-  font-weight: 600;
-}
-.stattext { opacity: .9; }
-.statpct { color: var(--muted); font-weight: 500; }
 .progress {
-  height: 8px;
+  height: 10px;
   border-radius: 999px;
   background: color-mix(in oklab, var(--line) 70%, transparent);
   overflow: hidden;
@@ -76,11 +64,6 @@ html, body, .arena { -webkit-tap-highlight-color: transparent; }
 /* Firefox mobile’s inner focus border */
 .node::-moz-focus-inner { border: 0; }
 
-/* Keep keyboard a11y outline for desktop users only */
-@media (hover: hover) and (pointer: fine) {
-  .node:focus-visible { outline: 2px solid var(--line); }
-}
-
 /* Ensure the emoji glyph itself can’t be selected or long-pressed */
 .node .glyph {
   -webkit-user-select: none;
@@ -89,12 +72,13 @@ html, body, .arena { -webkit-tap-highlight-color: transparent; }
   pointer-events: none; /* taps go to the button */
 }
 
-.node:focus-visible { outline: 2px solid var(--line); }
+/* :focus-visible already excludes touch focus, so no media query gate needed */
+.node:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* New: subtle click feedback */
+/* subtle click feedback */
 .node:active { transform: scale(0.96); }
 
-/* New: critical node visual – 2× scale + gentle glow + ✨ marker */
+/* critical node visual – 2× scale + gentle glow + ✨ marker */
 .node.crit {
   transform: scale(2);
   filter: drop-shadow(0 0 6px color-mix(in oklab, var(--accent) 60%, transparent));
@@ -109,7 +93,7 @@ html, body, .arena { -webkit-tap-highlight-color: transparent; }
   pointer-events: none;
 }
 
-/* New: level-up toast */
+/* level-up toast */
 .toast {
   position: fixed;
   left: 50%;
@@ -133,7 +117,7 @@ html, body, .arena { -webkit-tap-highlight-color: transparent; }
   transform: translateX(-50%) translateY(0);
 }
 
-/* New: confetti bits */
+/* confetti bits */
 .confetti {
   position: absolute;
   width: 6px; height: 10px;
@@ -173,6 +157,3 @@ html, body, .arena { -webkit-tap-highlight-color: transparent; }
   font-weight: 600;
   opacity: .9;
 }
-
-/* Optional: slimmer bar looks better inline */
-.progress { height: 10px; }

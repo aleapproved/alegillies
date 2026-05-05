@@ -1,35 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>cv — alessandrogillies.com</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alessandro Gillies — CV</title>
 
-  <!-- Prevent white flash by setting theme before paint -->
+  <!-- Prevent white flash; theme-init.js also creates the favicon link -->
   <script src="/theme-init.js"></script>
 
-  <meta name="description" content="Alessandro Gillies — CV: experience and education." />
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'">
 
-  <link rel="stylesheet" href="/base.css?v=5">
+  <link rel="canonical" href="https://alessandrogillies.com/cv/">
 
-  <link id="favicon" rel="icon" type="image/svg+xml" href="">
-  
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Alessandro Gillies — CV">
+  <meta property="og:url" content="https://alessandrogillies.com/cv/">
+  <meta property="og:image" content="https://alessandrogillies.com/social-card.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_GB">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Alessandro Gillies — CV">
+  <meta name="twitter:image" content="https://alessandrogillies.com/social-card.jpg">
+
+  <link rel="stylesheet" href="/base.css">
 </head>
 <body data-page="cv">
-  <div class="wrap">
+  <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Switch to dark mode"><span class="theme-toggle__icon" aria-hidden="true">☀️</span></button>
+
+  <main class="wrap">
     <div class="page-header">
-      <img src="/profile-image.jpg" alt="Ale" class="profile-image">
+      <img src="/profile-image.jpg" alt="Ale" class="profile-image" width="140" height="140" decoding="async" fetchpriority="high">
       <h1>cv</h1>
     </div>
 
     <h2 class="section-title">experience</h2>
 
     <div class="org-block">
-      <div class="org-name">Government Digital Service</div>
+      <h3 class="org-name">Government Digital Service</h3>
       <ul class="role-list">
         <li class="role-item">
           <div>Lead Product Manager</div>
@@ -39,7 +51,7 @@
     </div>
 
     <div class="org-block">
-      <div class="org-name">Foreign, Commonwealth and Development Office</div>
+      <h3 class="org-name">Foreign, Commonwealth and Development Office</h3>
       <ul class="role-list">
         <li class="role-item">
           <div>Senior Product Manager</div>
@@ -49,7 +61,7 @@
     </div>
 
     <div class="org-block">
-      <div class="org-name">Government Digital Service</div>
+      <h3 class="org-name">Government Digital Service</h3>
       <ul class="role-list">
         <li class="role-item">
           <div>Senior Strategy &amp; Policy Adviser</div>
@@ -63,7 +75,7 @@
     </div>
 
     <div class="org-block">
-      <div class="org-name">Cabinet Office</div>
+      <h3 class="org-name">Cabinet Office</h3>
       <ul class="role-list">
         <li class="role-item">
           <div>Policy Adviser</div>
@@ -83,7 +95,7 @@
     <h2 class="section-title">education</h2>
 
     <div class="org-block">
-      <div class="org-name">University of Aberdeen</div>
+      <h3 class="org-name">University of Aberdeen</h3>
       <ul class="role-list">
         <li class="role-item">
           <div>BSc Mathematics &amp; Physics (First-Class Honours)</div>
@@ -96,9 +108,8 @@
       </ul>
     </div>
 
-  </div>
+  </main>
 
-  <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode">☀️</button>
   <script src="/pages.js" defer></script>
   <script src="/theme.js" defer></script>
   <script src="/favicon.js" defer></script>

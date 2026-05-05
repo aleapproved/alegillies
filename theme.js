@@ -11,17 +11,21 @@
     const value = next === 'dark' ? 'dark' : 'light';
     if (value === 'dark') {
       ROOT.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
     } else {
       ROOT.removeAttribute('data-theme');
-      localStorage.removeItem('theme');
     }
+    // Persist BOTH 'light' and 'dark' explicitly. Storing nothing means
+    // "user has no preference, follow OS" — which would override an explicit
+    // light choice on the next page if the OS prefers dark.
+    localStorage.setItem('theme', value);
 
     // Reflect on the toggle if present
     const btn = document.getElementById('themeToggle');
     if (btn) {
       btn.setAttribute('aria-pressed', value === 'dark' ? 'true' : 'false');
-      btn.textContent = value === 'dark' ? '🌕' : '☀️';
+      btn.setAttribute('aria-label', value === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      const icon = btn.querySelector('.theme-toggle__icon');
+      if (icon) icon.textContent = value === 'dark' ? '🌕' : '☀️';
     }
 
     // Notify listeners
@@ -39,10 +43,12 @@
       const next = getTheme() === 'dark' ? 'light' : 'dark';
       setTheme(next);
     });
-    // Ensure correct aria-pressed and icon on load
+    // Ensure correct aria-pressed, aria-label, and icon on load
     const theme = getTheme();
     btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
-    btn.textContent = theme === 'dark' ? '🌕' : '☀️';
+    btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    const icon = btn.querySelector('.theme-toggle__icon');
+    if (icon) icon.textContent = theme === 'dark' ? '🌕' : '☀️';
   }
 
   if (document.readyState === 'loading') {

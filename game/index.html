@@ -3,42 +3,55 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>game — alessandrogillies.com</title>
+  <title>Alessandro Gillies — Game</title>
 
-  <!-- Set theme before paint -->
+  <!-- Set theme before paint; theme-init.js also creates the favicon link -->
   <script src="/theme-init.js"></script>
 
-  <meta name="description" content="Minimal clicker game — woodcutting, mining and fishing with a clean aesthetic." />
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'">
+
+  <!-- Easter egg page: keep search engines from indexing it. -->
+  <meta name="robots" content="noindex">
+
+  <link rel="canonical" href="https://alessandrogillies.com/game/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Alessandro Gillies — Game">
+  <meta property="og:url" content="https://alessandrogillies.com/game/">
+  <meta property="og:image" content="https://alessandrogillies.com/social-card.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_GB">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Alessandro Gillies — Game">
+  <meta name="twitter:image" content="https://alessandrogillies.com/social-card.jpg">
 
   <!-- Site CSS -->
-  <link rel="stylesheet" href="/base.css?v=5">
-  <link rel="stylesheet" href="/game.css?v=2">
-
-  <style>
-    /* Only this page: don’t allow vertical scrolling */
-    html { overflow-y: hidden; }
-
-  </style>
-
+  <link rel="stylesheet" href="/base.css">
+  <link rel="stylesheet" href="/game.css">
 </head>
 <body data-page="game">
 
-  <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode">☀️</button>
+  <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Switch to dark mode"><span class="theme-toggle__icon" aria-hidden="true">☀️</span></button>
 
-  <div class="wrap">
+  <main class="wrap">
     <div class="page-header">
-      <img src="/profile-image.jpg" alt="Ale" class="profile-image">
+      <img src="/profile-image.jpg" alt="Ale" class="profile-image" width="140" height="140" decoding="async" fetchpriority="high">
       <h1>game</h1>
     </div>
 
     <div class="game-grid">
-      <section>
+      <div>
         <dl class="stats" aria-live="polite">
           <dt>woodcutting</dt>
           <dd>
             <div class="statrow">
               <div class="progress" aria-hidden="true">
-                <div class="progress-bar" id="bar-wood" style="width:0%"></div>
+                <div class="progress-bar" id="bar-wood"></div>
               </div>
               <span class="level" id="text-wood">–</span>
             </div>
@@ -48,7 +61,7 @@
           <dd>
             <div class="statrow">
               <div class="progress" aria-hidden="true">
-                <div class="progress-bar" id="bar-mine" style="width:0%"></div>
+                <div class="progress-bar" id="bar-mine"></div>
               </div>
               <span class="level" id="text-mine">–</span>
             </div>
@@ -58,19 +71,19 @@
           <dd>
             <div class="statrow">
               <div class="progress" aria-hidden="true">
-                <div class="progress-bar" id="bar-fish" style="width:0%"></div>
+                <div class="progress-bar" id="bar-fish"></div>
               </div>
               <span class="level" id="text-fish">–</span>
             </div>
           </dd>
         </dl>
-      </section>
+      </div>
 
-      <section>
-        <div class="arena" id="arena" aria-label="play area"></div>
-      </section>
+      <div>
+        <section class="arena" id="arena" aria-label="play area"></section>
+      </div>
     </div>
-  </div>
+  </main>
 
   <!-- Level-up toast (announced to SR via aria-live) -->
   <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -78,34 +91,9 @@
   <!-- Game logic -->
   <script src="/game/game.js" defer></script>
 
-  <script>
-    (function () {
-      const GAP = 24; // px gap between arena and bottom of the screen
-      const arena = document.getElementById('arena');
-
-      function fitArena() {
-        if (!arena) return;
-
-        // Temporarily unset height to measure true top position
-        arena.style.height = 'auto';
-        const top = arena.getBoundingClientRect().top; // px from viewport top to arena top
-
-        // Remaining space minus our desired bottom gap
-        const available = Math.max(140, Math.floor(window.innerHeight - GAP - top));
-        arena.style.height = available + 'px';
-      }
-
-      // Re-fit on common resizes and after fonts load (text height can change)
-      window.addEventListener('resize', fitArena);
-      window.addEventListener('orientationchange', fitArena);
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitArena);
-      window.addEventListener('load', fitArena);
-
-      // First run
-      fitArena();
-    })();
-  </script>
-
+  <!-- Easter egg: this page is intentionally not in the nav, and intentionally
+       does NOT load pages.js / nav.js / nav-layout.js. Visitors only reach
+       /game/ if they know the URL. Do not "fix" this. -->
   <script src="/theme.js" defer></script>
   <script src="/favicon.js" defer></script>
 

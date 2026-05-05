@@ -1,10 +1,17 @@
+@font-face {
+  font-family: Inter;
+  src: url('/InterVariable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #ffffff;
   --text: #0a0a0a;
   --muted: #6b7280;
   --line: #e5e7eb;
 
-  /* New UI tokens */
   --accent: #3b82f6;
   --accent-weak: #93c5fd;
   --good: #22c55e;
@@ -24,8 +31,9 @@
 /* Disable transitions during first paint to avoid flashes */
 .no-anim *, .no-anim *::before, .no-anim *::after { transition: none !important; }
 
-/* Always reserve scrollbar space so layout width is identical on all pages */
-html { overflow-y: scroll; scroll-behavior: smooth; }
+/* Reserve scrollbar gutter so page width is identical regardless of whether
+   the bar is needed — but only show the bar when content overflows. */
+html { scrollbar-gutter: stable; }
 
 body {
   margin: 0;
@@ -33,7 +41,7 @@ body {
   justify-content: center;
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   font-size: 18px;
   line-height: 1.65;
   transition: background 0.25s ease, color 0.25s ease;
@@ -54,11 +62,7 @@ p { margin: 0 0 1rem; font-size: 1.15rem; max-width: 72ch; }
 a {
   color: inherit;
   text-decoration: none;
-  border-bottom: 1px solid var(--line);
-  transition: color 140ms ease, border-color 140ms ease;
-  text-underline-offset: 3px;
 }
-a:hover, a:focus-visible { border-bottom-color: currentColor; outline: none; }
 
 /* ---------- Theme toggle ---------- */
 .theme-toggle {
@@ -74,7 +78,9 @@ a:hover, a:focus-visible { border-bottom-color: currentColor; outline: none; }
 }
 
 .theme-toggle:focus-visible {
-  outline: none;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* ---------- Wandering links (desktop) ---------- */
@@ -91,7 +97,8 @@ a:hover, a:focus-visible { border-bottom-color: currentColor; outline: none; }
   padding: .25rem .4rem;
 }
 .floatingLink.ready { opacity: 1; pointer-events: auto; }
-.floatingLink:hover, .floatingLink:focus-visible { transform: translateY(-2px); outline: none; }
+.floatingLink:hover, .floatingLink:focus-visible { transform: translateY(-2px); }
+.floatingLink:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
 
 /* ---------- Bottom link rail (mobile) ---------- */
 #linkRail {
@@ -110,8 +117,7 @@ a:hover, a:focus-visible { border-bottom-color: currentColor; outline: none; }
   border-top: 1px solid var(--line);
 }
 
-/* Chip styling inside the rail */
-#linkRail .floatingLink {
+.chip {
   position: static;
   opacity: 1;
   pointer-events: auto;
@@ -146,7 +152,7 @@ h2 { margin: 0; }
 .profile-section + .section-title { margin-top: 0; }
 .org-block { margin: 1rem 0 1.25rem; }
 .section-title + .org-block { margin-top: 0.25rem; }
-.org-name { font-weight: 600; margin: 0 0 .35rem; }
+.org-name { font-size: inherit; font-weight: 600; margin: 0 0 .35rem; line-height: inherit; }
 .role-list { list-style: none; margin: 0; padding: 0; }
 .role-item {
   display: grid; grid-template-columns: 1fr auto;
@@ -154,36 +160,7 @@ h2 { margin: 0; }
 }
 .dates { color: var(--muted); font-size: .95rem; white-space: nowrap; }
 
-@media (max-width: 720px) {
-  .role-item { grid-template-columns: 1fr; gap: .15rem; }
-  .dates { order: 3; }
-}
-
 .wrap > *:not(h1):not(hr) { max-width: 72ch; }
-
-@media (max-width: 720px) {
-  .section-title { font-size: 1.5rem; margin-top: 2rem; }
-  p { font-size: 1.05rem; line-height: 1.6; }
-  .role-item { grid-template-columns: 1fr; gap: 0.1rem; padding: 0.15rem 0; }
-  .org-name { font-size: 1.1rem; }
-  .dates { font-size: 0.95rem; }
-  .edu-line { display: block; margin: 0 0 0.35rem; }
-}
-
-/* ---------- Fallback for browsers without backdrop-filter ---------- */
-@supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
-  #linkRail { background: var(--bg); }
-  .toggle   { background: var(--bg); }
-}
-
-@supports not (background: color-mix(in oklab, white 75%, transparent)) {
-  #linkRail, .toggle { background: var(--bg); }
-}
-
-a.no-underline {
-  border-bottom: none !important;
-  text-decoration: none !important;
-}
 
 /* ---------- Profile section (home page) ---------- */
 .profile-section {
@@ -237,22 +214,22 @@ a.no-underline {
 }
 
 @media (max-width: 720px) {
-  .profile-section {
-    gap: 1.25rem;
-  }
-  
-  .page-header {
-    gap: 1.25rem;
-  }
-  
-  .profile-image {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .greeting {
-    font-size: 1.75rem;
-  }
+  .section-title { font-size: 1.5rem; margin-top: 2rem; }
+  p { font-size: 1.05rem; line-height: 1.6; }
+  .role-item { grid-template-columns: 1fr; gap: 0.1rem; padding: 0.15rem 0; }
+  .org-name { font-size: 1.1rem; }
+  .dates { order: 3; font-size: 0.95rem; }
+  .profile-section { gap: 1.25rem; }
+  .page-header { gap: 1.25rem; }
+  .profile-image { width: 100px; height: 100px; }
+  .greeting { font-size: 1.75rem; }
+}
 
+/* ---------- Fallback for browsers without backdrop-filter ---------- */
+@supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+  #linkRail { background: var(--bg); }
+}
 
+@supports not (background: color-mix(in oklab, white 75%, transparent)) {
+  #linkRail { background: var(--bg); }
 }

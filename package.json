@@ -1,0 +1,28 @@
+{
+  "name": "alegillies",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal site for alessandrogillies.com",
+  "type": "module",
+  "scripts": {
+    "serve": "http-server -p 8000 -c-1 --silent",
+    "test": "npm run lint && npm run test:e2e",
+    "test:e2e": "playwright test",
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:html",
+    "lint:js": "eslint .",
+    "lint:css": "stylelint \"**/*.css\" --ignore-path .gitignore",
+    "lint:html": "htmlhint \"**/*.html\" --ignore \"node_modules/**,playwright-report/**,test-results/**\""
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.59.1",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0",
+    "html-validate": "^10.15.0",
+    "htmlhint": "^1.9.2",
+    "http-server": "^14.1.1",
+    "stylelint": "^17.11.0",
+    "stylelint-config-standard": "^40.0.0"
+  }
+}

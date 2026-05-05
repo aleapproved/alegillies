@@ -29,11 +29,7 @@
     if (links.length === 0) { deactivateRail(); return; }
 
     ensureRail();
-    // Shuffle for variety
-    for (let i = links.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [links[i], links[j]] = [links[j], links[i]];
-    }
+    // Order is already randomised by nav.js on page load — no need to re-shuffle here.
     links.forEach(a => {
       a.classList.add('chip');
       a.style.top = '';

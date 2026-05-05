@@ -3,14 +3,10 @@
   // pre-paint set, and again from favicon.js on load and theme changes.
   window.__updateFavicon = function () {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const tag = (document.body && document.body.getAttribute('data-page')) || '';
-    const path = (location.pathname || '').toLowerCase();
-    const id = tag.toLowerCase() || path;
-    const letter = id.includes('cv') ? 'c'
-                  : id.includes('malaphors') ? 'm'
-                  : id.includes('game') ? 'g'
-                  : id.includes('contact') ? '@'
-                  : 'a';
+    const LETTER = { cv: 'c', malaphors: 'm', game: 'g', contact: '@' };
+    const tag = (document.body && document.body.getAttribute('data-page') || '').toLowerCase();
+    const seg = (location.pathname || '/').toLowerCase().split('/').filter(Boolean)[0] || '';
+    const letter = LETTER[tag] || LETTER[seg] || 'a';
     const bg = isDark ? 'black' : 'white';
     const fg = isDark ? 'white' : 'black';
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="${bg}"/><text x="50" y="68" font-size="64" text-anchor="middle" fill="${fg}" font-family="sans-serif">${letter}</text></svg>`;

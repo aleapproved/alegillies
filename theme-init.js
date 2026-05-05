@@ -47,6 +47,7 @@
         const btn = document.getElementById('themeToggle');
         if (btn) {
           btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+          btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
           const icon = btn.querySelector('.theme-toggle__icon');
           if (icon) icon.textContent = isDark ? '🌕' : '☀️';
         }
@@ -57,7 +58,7 @@
     } else {
       enableTransitions();
     }
-  } catch (e) {
+  } catch {
     // Fail closed: remove the guard if anything goes wrong
     document.documentElement.classList.remove('no-anim');
   }

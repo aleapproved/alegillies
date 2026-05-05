@@ -19,7 +19,15 @@
 
     const here = normalizeCurrentSlug();
 
-    pages.forEach(p => {
+    // Fisher–Yates shuffle a copy so each page load gets a fresh order.
+    // (Don't mutate window.SITE_PAGES — other listeners may read it.)
+    const shuffled = pages.slice();
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    shuffled.forEach(p => {
       const slug = p.slug || '';
       const isExternal = slug.startsWith('http');
       const isCurrent = !isExternal && slug === here;

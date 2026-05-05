@@ -3,25 +3,49 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>alessandrogillies.com</title>
+  <title>Alessandro Gillies — Product Manager</title>
 
-  <link id="favicon" rel="icon" type="image/svg+xml" href="">
-
-  <!-- Prevent white flash -->
+  <!-- Prevent white flash; theme-init.js also creates the favicon link -->
   <script src="/theme-init.js"></script>
 
-  <meta name="description" content="alessandrogillies.com – friendly and approachable product manager." />
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'">
 
-  <link rel="stylesheet" href="/base.css?v=5">
+  <link rel="canonical" href="https://alessandrogillies.com/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Alessandro Gillies — Product Manager">
+  <meta property="og:url" content="https://alessandrogillies.com/">
+  <meta property="og:image" content="https://alessandrogillies.com/social-card.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_GB">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Alessandro Gillies — Product Manager">
+  <meta name="twitter:image" content="https://alessandrogillies.com/social-card.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Alessandro Gillies",
+    "jobTitle": "Lead Product Manager",
+    "worksFor": { "@type": "Organization", "name": "Government Digital Service" },
+    "url": "https://alessandrogillies.com/",
+    "image": "https://alessandrogillies.com/social-card.jpg",
+    "sameAs": ["https://www.linkedin.com/in/alessandrogillies/"]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/base.css">
 </head>
 <body data-page="home">
-  <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode"><span class="theme-toggle__icon" aria-hidden="true">☀️</span></button>
+  <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Switch to dark mode"><span class="theme-toggle__icon" aria-hidden="true">☀️</span></button>
 
-  <div class="wrap">
+  <main class="wrap">
     <div class="profile-section">
       <img src="/profile-image.jpg" alt="Ale" class="profile-image" width="140" height="140" decoding="async" fetchpriority="high">
       <h1 class="greeting">Hello!<br>I'm Ale.</h1>
@@ -29,7 +53,7 @@
       <p>Friendly and approachable, I build strong relationships wherever I work.</p>
       <p>My experience spans highly digital organisations as well as those still early on in their journey.</p>
     </div>
-  </div>
+  </main>
 
   <script src="/pages.js" defer></script>
   <script src="/theme.js" defer></script>

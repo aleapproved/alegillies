@@ -174,16 +174,16 @@
   }
 
   function updateStatsUI(){
-    setStatUI('wood', state.wood, textWood, barWood);
-    setStatUI('mine', state.mine, textMine, barMine);
-    setStatUI('fish', state.fish, textFish, barFish);
+    setStatUI(state.wood, textWood, barWood);
+    setStatUI(state.mine, textMine, barMine);
+    setStatUI(state.fish, textFish, barFish);
   }
 
-  function setStatUI(label, s, textEl, barEl){
-  const percent = s.lvl >= 99 ? 100 : Math.floor((s.xp / s.next) * 100);
-  const lvlText = s.lvl >= 99 ? `lvl 99` : `lvl ${s.lvl}`;
-  if (textEl) textEl.textContent = lvlText;
-  if (barEl)  barEl.style.width  = `${Math.min(100, percent)}%`;
+  function setStatUI(s, textEl, barEl){
+    const percent = s.lvl >= 99 ? 100 : Math.floor((s.xp / s.next) * 100);
+    const lvlText = s.lvl >= 99 ? `lvl 99` : `lvl ${s.lvl}`;
+    if (textEl) textEl.textContent = lvlText;
+    if (barEl)  barEl.style.width  = `${Math.min(100, percent)}%`;
   }
 
   function bump(kind){
@@ -238,12 +238,28 @@
     updateStatsUI();
   }
 
-  // Reposition nodes on viewport and arena size changes
-  window.addEventListener('resize', () => ['wood','mine','fish'].forEach(placeNode));
+  // Fit arena to remaining viewport height (24px bottom gap)
+  function fitArena() {
+    if (!arena) return;
+    arena.style.height = 'auto';
+    const top = arena.getBoundingClientRect().top;
+    const available = Math.max(140, Math.floor(window.innerHeight - 24 - top));
+    arena.style.height = available + 'px';
+  }
+
+  // Refit the arena on viewport changes. The ResizeObserver below then
+  // catches any *actual* arena size change (e.g. orientation flip) and
+  // reposition emojis. This keeps emojis stable when the user resizes
+  // the window in a way that doesn't change the arena.
+  window.addEventListener('resize', fitArena);
+  window.addEventListener('orientationchange', fitArena);
+  window.addEventListener('load', fitArena);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitArena);
   if ('ResizeObserver' in window) {
     const ro = new ResizeObserver(() => ['wood','mine','fish'].forEach(placeNode));
     ro.observe(arena);
   }
 
+  fitArena();
   start();
 })();
